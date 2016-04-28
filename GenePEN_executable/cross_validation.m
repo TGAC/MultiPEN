@@ -1,0 +1,216 @@
+function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, numIter, dirResults)
+%function [weights, vts, Fcross, outcome_stats] = cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, dirResults)
+
+% Example application of the GenePEN method for
+% supervised sample classification and identification of
+% network-grouped predictive features in gene/protein
+% expression data
+% 
+% This script runs a cross-validation on example
+% gene expression and molecular interaction data for
+% GenePEN and computes a matrix of averaged outcome
+% statistics, including the avg. size of the largest connected
+% component and the avg. areq under the receiver operating
+% characterisitc cure (AUC).
+%
+% Installation instructions: 
+% Before running the code below, please add the path to
+% your local TFOCS installation to Matlab and set the current
+% directory to the one containing the gene/protein
+% expression and interaction network data and file GenePEN.m.
+% In order to compute the largest connected component
+% among the selected features in the network, the Matlab
+% package 'gaimc' has to be installed and the path to the
+% must be added (gaimc is freely available online at
+% www.mathworks.com/matlabcentral/fileexchange/24134-gaimc).
+%
+% Minimum requirements:
+% The code has been tested on a standard laptop with 4 GB
+% RAM and 2 GHz CPU. We recommend to use a machine with
+% similar or superior memory and processor configuration.
+
+
+% Please uncomment and edit the two lines below so that they
+% point to your TFOCS and gaimc installation directories
+% addpath('Libraries/GenePEN/')
+% addpath('Libraries/TFOCS-1.3.1/')
+% addpath('Libraries/gaimc/')
+
+
+% Read the example data
+% X: data matrix with rows = samples, columns = genes/proteins
+% E: interaction matrix with rows and column corresponding to genes/proteins
+% Y: outcome label vector (1 for patient samples, 0 for controls)
+X = load(XDataFile, '-ascii');      %X
+E = load(EDataFile, '-ascii');      %E
+Y = load(YDataFile, '-ascii');   %classes
+
+
+%Input arguments pass from the system prompt will be received as string 
+%input so one need to convert strings to the required data format
+all_lambdas = str2double(all_lambdas);
+cvfold = str2num(cvfold);
+numIter = str2num(numIter);
+
+disp('lambdas for cross validation')
+disp(all_lambdas)
+
+disp('number of folds for cross validation: ')
+disp(cvfold)
+
+fprintf('Number of max iterations: \n\t%i\n\n', numIter)
+
+disp('Output Directory: ')
+disp(dirResults)
+
+
+% store interaction matrix in sparse format
+P = sparse(E(:,1),E(:,2),E(:,3),size(X,2),size(X,2),size(E,1));
+
+% convert triangle matrix to symmetric matrix
+A = P + P' - diag(diag(P));
+
+% pre-process input matrix (For example Data)
+%X = X - repmat(mean(X),size(X,1),1); 
+%X = X / max(vec(X));
+
+%
+% Compute a cross-validation for GenePEN
+%
+
+% select lambda parameters to be used
+% (here either a single lambda parameter can be
+% specified or multiple lambda parameters can be
+% tested - for the latter, uncomment the 2nd
+% and 3rd line below)
+% all_lambdas = 0.6;
+% num_of_lambdas = 20; 
+% all_lambdas = logspace(-12,2,num_of_lambdas);  
+% all_lambdas =  logspace(-0.3,-0.01,num_of_lambdas);
+
+% run a 3-fold cross-validation CV)
+% (change this parameter to increase/decrease
+% the number of cross-validation cycles)
+% cvfold = 3;
+
+
+F = zeros(length(all_lambdas),6);
+for i = 1:length(all_lambdas)
+
+    lambda = all_lambdas(i);
+    fprintf('\n ######Lambda: %d\n', lambda)
+
+    % use this line to ensure reproducibility
+    rand('seed',12345);
+    %rng(sd)
+    
+    if cvfold>1         
+        c = cvpartition(Y,'kfold',cvfold);
+    end   
+
+    Fcross = zeros(cvfold,3);
+
+    weights = zeros(numel(X(1,:)),cvfold);
+    vts = zeros(1,cvfold);
+    for j=1:cvfold,
+
+            if cvfold==1        
+                Xtrain = X;
+                Ytrain = Y;
+            else
+                Xtrain = X(c.training(j),:);
+                Ytrain = Y(c.training(j),:);
+            end
+
+
+            [wt, vt] = GenePEN( Xtrain, Ytrain, A, lambda, numIter );
+            weights(:,j) = wt;   %Perla
+            vts(1,j) = vt;       %Perla
+
+            S = find(abs(wt)>1e-8);
+
+
+            %%
+            %Feature Selection
+            if (size(S, 1) > 0)
+                [~,p] = largest_component(A(S,S));
+            else
+                p = 0;
+            end
+
+            if cvfold==1
+                Xtest = X;
+                y = Y;
+            else
+                Xtest = X(c.test(j),:);
+                y = Y(c.test(j),:);
+            end
+
+            y_pred = Xtest *  wt;
+
+            if (max(y_pred) - min(y_pred) == 0)
+              if(max(y_pred) < 0)
+                ypred = zeros(1, size(y_pred,1));
+              else
+                ypred = ones(1, size(y_pred,1));
+              end
+           else
+              ypred = (y_pred - min(y_pred))/(max(y_pred) - min(y_pred));
+           end
+
+           r = tiedrank(ypred);
+           auc = (sum(r(y==1)) - sum(y==1) * (sum(y==1)+1)/2) /( sum(y<1) * sum(y==1));
+
+           Fcross(j,:) = [sum(p),numel(S),auc];
+
+           disp(' ');
+           disp('Current cycle:');
+           disp(horzcat('Area under the curve (AUC): ',num2str(auc)));
+           disp(horzcat('Size of largest connected component (LCC): ',num2str(sum(p))));
+           disp(' ');       
+           
+           
+    end
+
+    % averaged performance statistics
+    avgperf = mean(Fcross(:,3));
+    sdperf = std(Fcross(:,3));
+    avgclus = mean(Fcross(:,1));
+    avgsel = mean(Fcross(:,2));
+    sdclus = std(Fcross(:,1));
+
+    disp(' ');
+    disp('-------------');
+    disp(horzcat('Average AUC for selected lambda: ',num2str(avgperf)));
+    disp(' ');
+
+    F(i,:) = [lambda,avgclus,sdclus,avgsel,avgperf,sdperf];
+    
+    %% 
+    %Save feature feature selection results for current lambda
+    fileName = [dirResults 'weights_lambda' num2str(lambda) '.mat'];
+    fprintf('Saving results in file: \n    %s\n', fileName)    
+    save(fileName, 'weights')
+    dlmwrite([dirResults 'weights_lambda' num2str(lambda) '.txt'],weights,'delimiter','\t');
+    %vts parameter
+    fileName = [dirResults 'vts_lambda' num2str(lambda) '.mat'];
+    fprintf('Saving results in file: \n    %s\n', fileName)    
+    save(fileName, 'vts')
+    dlmwrite([dirResults 'vts_lambda' num2str(lambda) '.txt'],vts,'delimiter','\t');
+
+end
+
+% the resulting matrix "outcome_stats"
+% contains the following performance statistics:
+disp(' ');
+disp(horzcat('Outcome statistics:'));
+disp('Column 1: Used lambda parameter')
+disp('Column 2: Avg. size of the largest connected component (LCC)')
+disp('Column 3: Stddev. of LCC size');
+disp('Column 4: Avg. number of selected features')
+disp('Column 5: Avg. aurea under the receiver operating characteristic (AUC)')
+disp('Column 6: Stddev. of AUC');
+
+outcome_stats = F;
+disp('   lambda     LCC     std-LCC-size	features   AUC     std-AUC')    
+disp(F)
