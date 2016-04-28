@@ -1,0 +1,72 @@
+
+1. Download the Macintosh version of the MATLAB Runtime for R2015b 
+from the MathWorks Web site by navigating to
+
+   http://www.mathworks.com/products/compiler/mcr/index.html
+
+
+
+2. Set the environment variable in profile:
+
+	$vi ~/.profile
+
+3. Set the concatenation of these strings:
+
+${LD_LIBRARY_PATH}: 
+    MCR_ROOT/v90/runtime/maci64:
+    MCR_ROOT/v90/sys/os/maci64:
+    MCR_ROOT/v90/bin/maci64
+
+
+where: 
+
+MCR_ROOT is the directory for the MATLAB Compiler Runtime. For example, if MATLAB Runtime, v84, is located in MATLAB folder:
+
+/Applications/MATLAB/MATLAB_Compiler_Runtime/v84/runtime/maci64
+
+
+
+######TO RUN on MAC#######
+
+cd to location of the file and run this:
+
+CrossValidation.app/Contents/MacOS/applauncher ExampleInputs/X.txt ExampleInputs/E.txt ExampleInputs/Y.txt 0.01 1 100 'ExampleOutputs/'
+
+
+Definition:
+CrossValidation.app/Contents/MacOS/applauncher DataFile NetworkEdgesFile ClassesFile lambdas foldsForCrossValidation maxIterations OutputDirectory
+
+
+
+
+#####TO RUN on linux########
+
+cd to location of file and run this
+
+./run_CrossValidation.sh MCRPath input_X.txt input_E.txt input_Y.txt lambda folds4CrossValidation maxNumIterations ‘outputDirectory’
+
+
+Example:
+
+Let’s assume that MATLAB runtime is installed in:
+	/usr/users/ga004/userName/MatlabApps/MCR_R2015b_glnxa64/v90 
+
+The Input files are in:
+	ExampleInputs/
+
+And the output directory is:
+	ExampleOutputs/
+
+And GenePEN will be run with the following parameters:
+	lambda = 0.01  (right now it just takes one lambda value)
+    	1 fold
+    	100 maximum number of iterations
+
+
+Type the command:
+./run_CrossValidation.sh /usr/users/ga004/userName/MatlabApps/MCR_R2015b_glnxa64/v90 ExampleInputs/X.txt ExampleInputs/E.txt ExampleInputs/Y.txt 0.01 1 100 'ExampleOutputs/'
+
+
+
+NOTE:
+A second option would be to just type CrossValidation but this might require additional libraries.
