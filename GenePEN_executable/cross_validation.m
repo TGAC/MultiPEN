@@ -1,5 +1,7 @@
-function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, numIter, dirResults)
-%function [weights, vts, Fcross, outcome_stats] = cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, dirResults)
+%function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas,
+%cvfold, numIter, dirResults) deployed function
+function [weights, vts, Fcross, outcome_stats] = ...
+    cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, numIter, dirResults)
 
 % Example application of the GenePEN method for
 % supervised sample classification and identification of
@@ -12,7 +14,23 @@ function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, 
 % statistics, including the avg. size of the largest connected
 % component and the avg. areq under the receiver operating
 % characterisitc cure (AUC).
-%
+
+% Inputs:
+%       XDataFile
+%       EDataFile
+%       YDataFile
+%       all_lambdas     select lambda parameters to be used
+%                       (here either a single lambda parameter can be
+%                       specified or multiple lambda parameters can be
+%                       tested) e.g. 
+%                       all_lambdas = logspace(-12,2,num_of_lambdas);  
+%                       all_lambdas = logspace(-0.3,-0.01,num_of_lambdas);
+%       cvfold          the number of cross-validation cycles
+%       numIter         maximum number of itrations for optimisation
+%       dirResults      output directory
+%       
+% Outputs:
+
 % Installation instructions: 
 % Before running the code below, please add the path to
 % your local TFOCS installation to Matlab and set the current
@@ -41,16 +59,21 @@ function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, 
 % X: data matrix with rows = samples, columns = genes/proteins
 % E: interaction matrix with rows and column corresponding to genes/proteins
 % Y: outcome label vector (1 for patient samples, 0 for controls)
-X = load(XDataFile, '-ascii');      %X
-E = load(EDataFile, '-ascii');      %E
-Y = load(YDataFile, '-ascii');   %classes
 
-
-%Input arguments pass from the system prompt will be received as string 
-%input so one need to convert strings to the required data format
-all_lambdas = str2double(all_lambdas);
-cvfold = str2num(cvfold);
-numIter = str2num(numIter);
+if isdeployed
+    X = load(XDataFile, '-ascii');      %X
+    E = load(EDataFile, '-ascii');      %E
+    Y = load(YDataFile, '-ascii');   %classes
+    %Input arguments pass from the system prompt will be received as string 
+    %input so one need to convert strings to the required data format
+    all_lambdas = str2double(all_lambdas);   %or str2mat ???
+    cvfold = str2num(cvfold);
+    numIter = str2num(numIter);
+else
+    X = XDataFile;
+    E = EDataFile;
+    Y = YDataFile;
+end
 
 disp('lambdas for cross validation')
 disp(all_lambdas)
@@ -76,24 +99,6 @@ A = P + P' - diag(diag(P));
 
 %
 % Compute a cross-validation for GenePEN
-%
-
-% select lambda parameters to be used
-% (here either a single lambda parameter can be
-% specified or multiple lambda parameters can be
-% tested - for the latter, uncomment the 2nd
-% and 3rd line below)
-% all_lambdas = 0.6;
-% num_of_lambdas = 20; 
-% all_lambdas = logspace(-12,2,num_of_lambdas);  
-% all_lambdas =  logspace(-0.3,-0.01,num_of_lambdas);
-
-% run a 3-fold cross-validation CV)
-% (change this parameter to increase/decrease
-% the number of cross-validation cycles)
-% cvfold = 3;
-
-
 F = zeros(length(all_lambdas),6);
 for i = 1:length(all_lambdas)
 
@@ -124,14 +129,13 @@ for i = 1:length(all_lambdas)
 
 
             [wt, vt] = GenePEN( Xtrain, Ytrain, A, lambda, numIter );
-            weights(:,j) = wt;   %Perla
-            vts(1,j) = vt;       %Perla
+            weights(:,j) = wt;   %added by PTR
+            vts(1,j) = vt;       %added by PTR
 
             S = find(abs(wt)>1e-8);
 
 
-            %%
-            %Feature Selection
+            %% Feature Selection
             if (size(S, 1) > 0)
                 [~,p] = largest_component(A(S,S));
             else
@@ -202,15 +206,7 @@ end
 
 % the resulting matrix "outcome_stats"
 % contains the following performance statistics:
-disp(' ');
-disp(horzcat('Outcome statistics:'));
-disp('Column 1: Used lambda parameter')
-disp('Column 2: Avg. size of the largest connected component (LCC)')
-disp('Column 3: Stddev. of LCC size');
-disp('Column 4: Avg. number of selected features')
-disp('Column 5: Avg. aurea under the receiver operating characteristic (AUC)')
-disp('Column 6: Stddev. of AUC');
-
 outcome_stats = F;
+disp(' ');
 disp('   lambda     LCC     std-LCC-size	features   AUC     std-AUC')    
-disp(F)
+disp(outcome_stats)
