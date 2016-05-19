@@ -1,9 +1,14 @@
-function randomNetwork = randomiseNetwork(E, elementToChange, change, percentage)
+%function results = randomiseNetwork(X, E, elementToChange, typeOfChange, percentage)
+function randomiseNetwork(X, E, Y, geneNames, lambda, outputDir, ...
+             geneIndex, elementToChange, typeOfChange, percentage, numIter)
+        
 %Randomise the network according to the type of change specified
 %   gene2geneNetwork
 
 %example with network from escape:
 %load('/Users/troncosp/Documents/Projects/EscapePilot/inputForGenePEN/gene2geneNetwork.mat')
+
+rng('default')  % for reproducibility
 
 %get general features
 [numberEdges,~] = size(E);
@@ -11,7 +16,7 @@ numberNodes = numel(unique([E(:,1); E(:,2)]));
 fprintf('ORIGINAL NETWORK FEATURES \n')
 fprintf('Number of Edges: %i\n', numberEdges)
 fprintf('Number of Nodes: %i\n', numberNodes)
-
+%TO DO: degree distribution
 
 switch elementToChange
     case 'edge'
@@ -20,61 +25,47 @@ switch elementToChange
         totalElements = numberNodes;
 end
 
-nChanges = ceil(totalElements*percentage);
+changedElements = [];
+selectedGenes = [];
+outputRandomNetwork = [outputDir 'randomEdges_originalNetwork/'];
+geneSelectionE = GenePEN_test(X, E, Y, geneNames, lambda, outputRandomNetwork, geneIndex);
 
-switch change
-    case 'random'        
-        p = randperm(totalElements,nChanges);
-        newToNodes = p(end:-1:1);
-        from = E(:,1);        
-        score = E(:,3);                        
-        to =  E(:,2);
-        to(p) = E(newToNodes,2);
-        randomNetwork = [from to score];
-    case 'leaf'
-    case 'hub'
+for ii = 1 : numIter
+    modifiedE = E;
+    nChanges = ceil(totalElements*percentage);
+    changes = randperm(totalElements,nChanges);
+
+    switch typeOfChange
+        case 'swap'         
+            newToNodes = changes(end:-1:1);        
+            modifiedE(changes,2) = E(newToNodes,2);
+        case 'delete'
+            fprintf('In development...')    
+            modifiedE(changes,:) = [];
+    end
+
+    %where to save the random network
+    outputRandomNetwork = [outputDir 'randomEdges_network' num2str(ii) '/'];
+            
+            
+    %modifiedE is matrix [(from)index, (to)index, score]  
+    changedElements(end+1,:) = changes;
+%     save([outputRandomNetwork 'E.mat'], 'modifiedE')       
+%            dlmwrite([outputRandomNetwork 'E.csv'], modifiedE)
+    
+    geneSelection = GenePEN_test(X, modifiedE, Y, geneNames, lambda, outputRandomNetwork, geneIndex);
+%             selectedGenes(:,end+1) = geneSelection.weight;
+%             find(geneSelection.weight)'
 end
 
 
 
+for ii = 1 : numIter
+    fprintf('Modified Network, iteration %i\n', ii)
+    fprintf('Changed Elements: \n')
+    display(changedElements(ii,:))
+%             fprintf('Selected Genes: \n')
+%             display(find(selectedGenes(:,ii))')
+end
 
-% function randomNetwork = randomizeNetwork(network, elementToChange, change, percentage)
-% %Randomise the network according to the type of change specified
-% %   gene2geneNetwork
-% 
-% %example with network from escape:
-% %load('/Users/troncosp/Documents/Projects/EscapePilot/inputForGenePEN/gene2geneNetwork.mat')
-% 
-% %get general features
-% [numberEdges,~] = size(network);
-% numberNodes = numel(unique([network.fromIndx; network.toIndx]));
-% fprintf('ORIGINAL NETWORK FEATURES \n')
-% fprintf('Number of Edges: %i\n', numberEdges)
-% fprintf('Number of Nodes: %i\n', numberNodes)
-% 
-% 
-% switch elementToChange
-%     case 'edge'
-%         totalElements = numberEdges;
-%     case 'node'
-%         totalElements = numberNodes;
-% end
-% 
-% nChanges = ceil(totalElements*percentage);
-% 
-% switch change
-%     case 'random'        
-%         p = randperm(totalElements,nChanges);
-%         newToNodes = p(end:-1:1)
-%         from = network.from;
-%         fromIndex = network.fromIndx;        
-%         score = network.score;        
-%         to = network.to;
-%         to(p) = network.to(newToNodes);
-%         toIndex = network.toIndx;
-%         toIndex(p) = network.toIndx(newToNodes);
-%         randomNetwork = table(from,to, score, fromIndex, toIndex, ...
-%             'VariableNames', {'from' 'to' 'score' 'fromIndx' 'toIndx'});
-%     case 'leaf'
-%     case 'hub'
-% end
+display(unique(changedElements)')
