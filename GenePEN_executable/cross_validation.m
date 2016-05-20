@@ -50,9 +50,9 @@ function [weights, vts, Fcross, outcome_stats] = ...
 
 % Please uncomment and edit the two lines below so that they
 % point to your TFOCS and gaimc installation directories
-% addpath('Libraries/GenePEN/')
-% addpath('Libraries/TFOCS-1.3.1/')
-% addpath('Libraries/gaimc/')
+%addpath('Libraries/GenePEN/'])
+%addpath('Libraries/TFOCS-1.3.1/')
+%addpath('Libraries/gaimc/')
 
 
 % Read the example data
@@ -69,7 +69,7 @@ if isdeployed
     all_lambdas = str2double(all_lambdas);   %or str2mat ???
     cvfold = str2num(cvfold);
     numIter = str2num(numIter);
-else
+else    
     X = XDataFile;
     E = EDataFile;
     Y = YDataFile;
@@ -190,8 +190,12 @@ for i = 1:length(all_lambdas)
 
     F(i,:) = [lambda,avgclus,sdclus,avgsel,avgperf,sdperf];
     
-    %% 
-    %Save feature feature selection results for current lambda
+    %% Save feature feature selection results for current lambda
+    %check if drectory exists
+    if exist(dirResults, 'dir') ~= 7
+        mkdir(dirResults)
+    end    
+    %save results
     fileName = [dirResults 'weights_lambda' num2str(lambda) '.mat'];
     fprintf('Saving results in file: \n    %s\n', fileName)    
     save(fileName, 'weights')
