@@ -60,20 +60,39 @@ function [weights, vts, Fcross, outcome_stats] = ...
 % E: interaction matrix with rows and column corresponding to genes/proteins
 % Y: outcome label vector (1 for patient samples, 0 for controls)
 
-if isdeployed
-    X = load(XDataFile, '-ascii');      %X
-    E = load(EDataFile, '-ascii');      %E
-    Y = load(YDataFile, '-ascii');   %classes
-    %Input arguments pass from the system prompt will be received as string 
-    %input so one need to convert strings to the required data format
-    all_lambdas = str2num(all_lambdas);   %or str2mat ???
-    cvfold = str2num(cvfold);
-    numIter = str2num(numIter);
-else    
-    X = XDataFile;
-    E = EDataFile;
-    Y = YDataFile;
+%Input arguments passed from the system prompt will be received as strings
+%  Thus, converting strings to double if required 
+%X
+if isa(XDataFile,'double')
+    X = XDataFile;     
+else
+    X = load(XDataFile, '-ascii');
 end
+%E - network (edges)
+if isa(EDataFile,'double')
+    E = EDataFile;    
+else
+    E = load(EDataFile, '-ascii');
+end
+%class
+if isa(YDataFile,'double')
+    Y = YDataFile;
+else
+    Y = load(YDataFile, '-ascii');
+end
+%lambdas for cross validation
+if ~isa(all_lambdas, 'double')
+    all_lambdas = str2num(all_lambdas);   
+end
+%folds for cross validation
+if ~isa(cvfold, 'double')
+    cvfold = str2num(cvfold);
+end
+%maximum number of iterations for optimisation
+if ~isa(numIter, 'double')
+    numIter = str2num(numIter);
+end
+
 
 disp('lambdas for cross validation')
 disp(all_lambdas)
