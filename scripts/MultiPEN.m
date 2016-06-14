@@ -71,8 +71,7 @@ switch analysisType
         
     
     case 'RandomiseNetwork'                
-        %% UNDER DEVELOPMENT 
-        addpath '../multipen/scripts/' 
+        %% UNDER DEVELOPMENT        
         outputDir = ['cuffnorm_output/string/GenePEN_results/' samplesForAnalysis '/' ];
         
         %load geneIndex
