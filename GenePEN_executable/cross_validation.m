@@ -66,7 +66,7 @@ if isdeployed
     Y = load(YDataFile, '-ascii');   %classes
     %Input arguments pass from the system prompt will be received as string 
     %input so one need to convert strings to the required data format
-    all_lambdas = str2double(all_lambdas);   %or str2mat ???
+    all_lambdas = str2num(all_lambdas);   %or str2mat ???
     cvfold = str2num(cvfold);
     numIter = str2num(numIter);
 else    
@@ -106,8 +106,9 @@ for i = 1:length(all_lambdas)
     fprintf('\n ######Lambda: %d\n', lambda)
 
     % use this line to ensure reproducibility
-    rand('seed',12345);
-    %rng(sd)
+    % rand('seed',12345);  %PTR: it is an obsolote use as for MALTAB20015b
+    rng('default')  %added by PTR
+    
     
     if cvfold>1         
         c = cvpartition(Y,'kfold',cvfold);
