@@ -30,7 +30,7 @@ MCR_ROOT is the directory for the MATLAB Compiler Runtime. For example, if MATLA
 
 cd to location of the file and run this:
 
-CrossValidation.app/Contents/MacOS/applauncher ExampleInputs/X.txt ExampleInputs/E.txt ExampleInputs/Y.txt 0.01 1 100 'ExampleOutputs/'
+CompilationForOSX/CrossValidation.app/Contents/MacOS/applauncher ExampleInputs/X.txt ExampleInputs/E.txt ExampleInputs/Y.txt 0.01 1 100 'ExampleOutputs/'
 
 
 Definition:
