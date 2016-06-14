@@ -99,7 +99,6 @@ switch analysisType
         
     case 'ErdosRenyi'
         %% UNDER DEVELOPMENT 
-        addpath '../multipen/scripts/' 
         outputDir = ['cuffnorm_output/string/GenePEN_results/' samplesForAnalysis '/RenyiErdos/' ]; 
         %load geneIndex
         load('cuffnorm_output/string/geneList_Index_1perRow.mat')
