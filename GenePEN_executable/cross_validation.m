@@ -16,7 +16,7 @@ function [weights, vts, Fcross, outcome_stats] = ...
 % characterisitc cure (AUC).
 
 % Inputs:
-%       XDataFile
+%       XDataFile       assumes that data has been normalised/standardised
 %       EDataFile
 %       YDataFile
 %       all_lambdas     select lambda parameters to be used
@@ -112,11 +112,7 @@ P = sparse(E(:,1),E(:,2),E(:,3),size(X,2),size(X,2),size(E,1));
 % convert triangle matrix to symmetric matrix
 A = P + P' - diag(diag(P));
 
-% pre-process input matrix (For example Data)
-%X = X - repmat(mean(X),size(X,1),1); 
-%X = X / max(vec(X));
 
-%
 % Compute a cross-validation for GenePEN
 F = zeros(length(all_lambdas),6);
 for i = 1:length(all_lambdas)
@@ -148,11 +144,15 @@ for i = 1:length(all_lambdas)
             end
 
 
-            [wt, vt] = GenePEN( Xtrain, Ytrain, A, lambda, numIter );
-            weights(:,j) = wt;   %added by PTR
-            vts(1,j) = vt;       %added by PTR
-
+            [wt, vt] = GenePEN( Xtrain, Ytrain, A, lambda, numIter ); 
+            
+            % indexes of features that would be selected
             S = find(abs(wt)>1e-8);
+            
+            % Results for GenePEN
+            weights(:,j) = wt;   %added by PTR
+            vts(1,j) = vt;       %added by PTR            
+            weights(abs(wt)<1e-8,j) = 0;
 
 
             %% Feature Selection
