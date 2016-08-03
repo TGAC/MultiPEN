@@ -1,4 +1,4 @@
-function MultiPEN(analysisType, outputDir, X, E, Y, geneNames, ...
+function MP = MultiPEN(analysisType, outputDir, X, E, Y, geneNames, ...
     lambdas, geneIndex, folds, numIter)
 % Function to perform analysis of transcriptomics data using MultiPEN and
 % the different type of analysis (specified by parameter 'analysisType')
@@ -64,7 +64,11 @@ switch analysisType
         %sort genes by weight then by name
         sortedTop10 = sortrows(top10, {'ranking','shortName'});        
         fprintf('The top ranked genes are:\n')        
-        display(sortedTop10(:,[4 2 3 1]))
+        display(sortedTop10(:,[4 2 3 1 5]))
+        
+    case 'featureSelection'
+        FS = featureSelection(X, E, Y, geneNames, lambdas, outputDir, numIter);
+        MP = FS;
         
     case 'RankingsSeveralLambdas'
         %% UNDER DEVELOPMENT
