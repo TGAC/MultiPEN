@@ -1,8 +1,16 @@
-function MP = MultiPEN(analysisType, outputDir, X, E, Y, geneNames, ...
+function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
     lambdas, geneIndex, folds, numIter)
-% Function to perform analysis of transcriptomics data using MultiPEN and
+% Function to perform analysis of omics data using MultiPEN and
 % the different type of analysis (specified by parameter 'analysisType')
-% MultiPEN 0.0.1 computes gene selection from transcritpomics data
+% MultiPEN 0.0.1 computes feature selection from transcritpomics and 
+% metabolomics data
+% Written by Perla Rey, Agust 2016
+%
+% It uses following libraries:
+% GenePEN
+% TFOCS-1.3.1
+% gaimc
+% 
 
 %INPUT PARAMETERS
 % analysisType  
@@ -28,13 +36,12 @@ function MP = MultiPEN(analysisType, outputDir, X, E, Y, geneNames, ...
 % training  'crossValidation', 'GenePEN', or 'RandomiseNetwork',
 %           'ErdosRenyi'
 
-% %% addpaths to GenePEN and all necessary scripts
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/'
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/Libraries/'
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/Libraries/fastGapFill/'
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/Libraries/gaimc/'
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/Libraries/GenePEN/'
-% addpath '~/Documents/Projects/multipen/GenePEN_executable/Libraries/TFOCS-1.3.1/'
+% %% addpaths to libraries
+% addpath 'Libraries/'
+% addpath 'Libraries/fastGapFill/'
+% addpath 'Libraries/gaimc/'
+% addpath 'Libraries/GenePEN/'
+% addpath 'Libraries/TFOCS-1.3.1/'
 
 
 %% Analysis
@@ -58,7 +65,7 @@ switch analysisType
         display(stats)
     case 'GenePEN'        
         fprintf('Performing gene selection with GenePEN... \n')        
-        [~, rankedGenes] = geneSelection(X, E, Y, geneNames, lambdas, outputDir, geneIndex, numIter);
+        [~, rankedGenes] = geneSelection(X, E, Y, featureNames, lambdas, outputDir, geneIndex, numIter);
         %show top 10 rankings        
         top10 = rankedGenes(rankedGenes.ranking < 11,:);
         %sort genes by weight then by name
@@ -67,7 +74,7 @@ switch analysisType
         display(sortedTop10(:,[4 2 3 1 5]))
         
     case 'featureSelection'
-        FS = featureSelection(X, E, Y, geneNames, lambdas, outputDir, numIter);
+        FS = featureSelection(X, E, Y, featureNames, lambdas, outputDir, numIter);
         MP = FS;
         
     case 'RankingsSeveralLambdas'
@@ -88,7 +95,7 @@ switch analysisType
         %corresponding network (variable E100Nodes):
         load('cuffnorm_output/string/GenePEN_results/test2/E100Genes.mat')
         X100 = X(:,1:100);
-        geneNames = geneNames(1:100,:);  
+        featureNames = featureNames(1:100,:);  
         elementToChange = 'edge';
         typeOfChange = 'swap';
         perc = .40;   
@@ -98,7 +105,7 @@ switch analysisType
         %inputs:
         %geneSelection(X, modifiedE, Y, geneNames, lambdas, outputRandomNetwork, geneIndex);
         
-        randomiseNetwork(X100, E100Nodes, Y, geneNames, lambdas, outputDir, ...
+        randomiseNetwork(X100, E100Nodes, Y, featureNames, lambdas, outputDir, ...
             geneIndex, elementToChange, typeOfChange, perc, numRandomNetworks);
         
     case 'ErdosRenyi'
@@ -111,7 +118,7 @@ switch analysisType
         %load network
         %load('cuffnorm_output/string/GenePEN_results/test2/E100Genes.mat')
         X100 = X(:,1:100);
-        geneNames100 = geneNames(1:100,:);
+        geneNames100 = featureNames(1:100,:);
         numRandomNetworks = 5;       
         algorithm = 'MIT';
         %get the corresponding network for those 100 genes
