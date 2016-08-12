@@ -1,5 +1,6 @@
-function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
-    lambdas, geneIndex, folds, numIter)
+function MP = MultiPEN(analysisType, varargin)
+%function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
+%    lambdas, folds, numIter)
 % Function to perform analysis of omics data using MultiPEN and
 % the different type of analysis (specified by parameter 'analysisType')
 % MultiPEN 0.0.1 computes feature selection from transcritpomics and 
@@ -12,39 +13,53 @@ function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
 % gaimc
 % 
 
-%INPUT PARAMETERS
-% analysisType  
-%   'crossValidation', 'GenePEN', 'RandomiseNetwork', 'ErdosRenyi'
-% outputDir     directory for outputs
+% INPUTS
+%   analysisType    Options are: 
+%                   'crossValidation', 'featureSelection'
+%                   coming soon: 'GenePEN', 'RandomiseNetwork', 'ErdosRenyi'
+%   outputDir       Output directory
+%   X
+%   E
+%   Y
+%   featureNames
+%   lambdas         specify lambda(s)
+%   folds           for cross validation
+%   numIter         for optimisation, defaults is 100
 
-%function MultiPEN(inputDir, samplesForAnalysis, expressionType, scoreThreshold, inputData, folds, lambdas, training)
-% Analysis with MultiPEN
-% samplesForAnalysis      defines what input data to use:
-%           samplesForAnalysis = '18samplesBenignMalignant';  
-%                   all samples, two classes, control = PZ, PZ_mal
-%           samplesForAnalysis = '14samplesAllBenign';  
-%                   only bening samples, control = PZ
-% inputDir       Directory for the input data
-%           dir = 'MultiPEN/inputMultiPEN/';
-% score     score threshold for protein-protein interactions in the network
-%           scoreThreshold = 0.70;
-% inputData  Specifies whether to compute or load inputData
-%           inputData = 'compute';
-%           inputData = 'open';
-% folds     for cross validation
-% lambdas   specify lambdas to test
-% training  'crossValidation', 'GenePEN', or 'RandomiseNetwork',
-%           'ErdosRenyi'
+%% VERIFY INPUT ARGUMENTS
+switch analysisType
+    case 'cross_validation'
+        % cross validation needs parameters: 
+        % X, E, Y, lambdas, folds, numIter (optional)
+        if ~((nargin == 5) || (nargin == 6))
+            error('The number of arguments is incorrect')
+        else
+            X = varargin{1};
+            E = varargin{2};
+            Y = varargin{3};
+            lambdas = varargin{4};
+            folds = varargin{5};
+            if length(varargin) == 5
+                numIter = 100;
+            else
+                numIter = varargin{6};
+            end
+        end
+    otherwise
+        error('The type of analysis is incorrect')
+end
+    
 
-% %% addpaths to libraries
-% addpath 'Libraries/'
-% addpath 'Libraries/fastGapFill/'
-% addpath 'Libraries/gaimc/'
-% addpath 'Libraries/GenePEN/'
-% addpath 'Libraries/TFOCS-1.3.1/'
+%% Add library's path
+addpath('Libraries/')
+addpath('Libraries/fastGapFill/')
+addpath('Libraries/gaimc/')
+addpath('Libraries/GenePEN/')
+addpath('Libraries/TFOCS-1.3.1/')
 
 
 %% Analysis
+
 %If maximum number of iterations is not specified
 if numIter == 0  
     % set the default value
@@ -52,10 +67,10 @@ if numIter == 0
 end
 
 switch analysisType
-    case 'crossValidation'        
+    case 'cross_validation'
         %cross_validation for different lambdas
         fprintf('Performing cross validation... \n')        
-        [~, ~, ~, outcome_stats] = cross_validation(X, E, Y, lambdas, folds, numIter, outputDir);        
+        [~, ~, ~, outcome_stats] = cross_validation(X, E, Y, lambdas, folds, numIter);
         stats = table(outcome_stats(:,1), outcome_stats(:,2), outcome_stats(:,3), outcome_stats(:,4), outcome_stats(:,5), outcome_stats(:,6), ...
             'VariableNames', {'lambda' 'LCC' 'std_LCC' 'selected' 'AUC' 'std_AUC'});
         writetable(stats, [outputDir 'crossValidationStats.csv'])
@@ -63,6 +78,25 @@ switch analysisType
             [outputDir 'crossValidationStats.csv'])
         fprintf('Following are the statistics for cross validation\n')
         display(stats)
+        
+        MP = outcome_stats;
+        
+        %     %% Save feature feature selection results for current lambda
+%     %check if drectory exists
+%     if exist(dirResults, 'dir') ~= 7
+%         mkdir(dirResults)
+%     end    
+%     %save results
+%     fileName = [dirResults 'weights_lambda' num2str(lambda) '.mat'];
+%     fprintf('Saving results in file: \n    %s\n', fileName)    
+%     save(fileName, 'weights')
+%     dlmwrite([dirResults 'weights_lambda' num2str(lambda) '.txt'],weights,'delimiter','\t');
+%     %vts parameter
+%     fileName = [dirResults 'vts_lambda' num2str(lambda) '.mat'];
+%     fprintf('Saving results in file: \n    %s\n', fileName)    
+%     save(fileName, 'vts')
+%     dlmwrite([dirResults 'vts_lambda' num2str(lambda) '.txt'],vts,'delimiter','\t');
+
     case 'GenePEN'        
         fprintf('Performing gene selection with GenePEN... \n')        
         [~, rankedGenes] = geneSelection(X, E, Y, featureNames, lambdas, outputDir, geneIndex, numIter);
