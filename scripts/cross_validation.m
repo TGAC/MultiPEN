@@ -1,7 +1,5 @@
-%function cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas,
-%cvfold, numIter, dirResults) deployed function
 function [weights, vts, Fcross, outcome_stats] = ...
-    cross_validation(XDataFile, EDataFile, YDataFile, all_lambdas, cvfold, numIter, dirResults)
+    cross_validation(X, E, Y, all_lambdas, cvfold, numIter)
 
 % Example application of the GenePEN method for
 % supervised sample classification and identification of
@@ -16,20 +14,27 @@ function [weights, vts, Fcross, outcome_stats] = ...
 % characterisitc cure (AUC).
 
 % Inputs:
-%       XDataFile       assumes that data has been normalised/standardised
-%       EDataFile
-%       YDataFile
-%       all_lambdas     select lambda parameters to be used
-%                       (here either a single lambda parameter can be
-%                       specified or multiple lambda parameters can be
-%                       tested) e.g. 
-%                       all_lambdas = logspace(-12,2,num_of_lambdas);  
-%                       all_lambdas = logspace(-0.3,-0.01,num_of_lambdas);
-%       cvfold          the number of cross-validation cycles
-%       numIter         maximum number of itrations for optimisation
-%       dirResults      output directory
+%   XDataFile       data matrix with rows = samples, columns = genes/proteins
+%                   assumes that data has been normalised/standardised
+%   YDataFile       class for each sample, i.e., 0 for control, 1 for cases
+%   EDataFile       Interaction matrix, i.e., the network's edge list. 
+%                   Each row specifies an interaction in the format:
+%                   [node node interaction-weight]
+%   all_lambdas     select lambda parameters to be used
+%                   (here either a single lambda parameter can be
+%                   specified or multiple lambda parameters can be
+%                   tested) e.g.:
+%                   all_lambdas = logspace(-12,2,num_of_lambdas);  
+%                   all_lambdas = logspace(-0.3,-0.01,num_of_lambdas);
+%       cvfold      the number of cross-validation cycles
+%       numIter     maximum number of itrations for optimisation
 %       
 % Outputs:
+%   weights
+%   vts  
+%   Fcross
+%   outcome_stats
+%
 
 % Installation instructions: 
 % Before running the code below, please add the path to
@@ -48,37 +53,24 @@ function [weights, vts, Fcross, outcome_stats] = ...
 % similar or superior memory and processor configuration.
 
 
-% Please uncomment and edit the two lines below so that they
-% point to your TFOCS and gaimc installation directories
-%addpath('Libraries/GenePEN/'])
-%addpath('Libraries/TFOCS-1.3.1/')
-%addpath('Libraries/gaimc/')
 
-
-% Read the example data
-% X: data matrix with rows = samples, columns = genes/proteins
-% E: interaction matrix with rows and column corresponding to genes/proteins
-% Y: outcome label vector (1 for patient samples, 0 for controls)
-
-%Input arguments passed from the system prompt will be received as strings
+%% Read Input Data
+%  Input arguments passed from the system prompt will be received as strings
 %  Thus, converting strings to double if required 
 %X
-if isa(XDataFile,'double')
-    X = XDataFile;     
-else
-    X = load(XDataFile, '-ascii');
+if ~isa(X,'double')
+    Xfile = X;     
+    X = load(Xfile, '-ascii');
 end
-%E - network (edges)
-if isa(EDataFile,'double')
-    E = EDataFile;    
-else
-    E = load(EDataFile, '-ascii');
+%E - interaction matrix (network edges)
+if ~isa(E,'double')
+    Efile = E;    
+    E = load(Efile, '-ascii');
 end
 %class
-if isa(YDataFile,'double')
-    Y = YDataFile;
-else
-    Y = load(YDataFile, '-ascii');
+if ~isa(Y,'double')
+    Yfile = Y;
+    Y = load(Yfile, '-ascii');
 end
 %lambdas for cross validation
 if ~isa(all_lambdas, 'double')
@@ -102,10 +94,8 @@ disp(cvfold)
 
 fprintf('Number of max iterations: \n\t%i\n\n', numIter)
 
-disp('Output Directory: ')
-disp(dirResults)
 
-
+%% Preparing Data
 % store interaction matrix in sparse format
 P = sparse(E(:,1),E(:,2),E(:,3),size(X,2),size(X,2),size(E,1));
 
@@ -113,6 +103,7 @@ P = sparse(E(:,1),E(:,2),E(:,3),size(X,2),size(X,2),size(E,1));
 A = P + P' - diag(diag(P));
 
 
+%% Cross Validation
 % Compute a cross-validation for GenePEN
 F = zeros(length(all_lambdas),6);
 for i = 1:length(all_lambdas)
@@ -209,22 +200,6 @@ for i = 1:length(all_lambdas)
     disp(' ');
 
     F(i,:) = [lambda,avgclus,sdclus,avgsel,avgperf,sdperf];
-    
-    %% Save feature feature selection results for current lambda
-    %check if drectory exists
-    if exist(dirResults, 'dir') ~= 7
-        mkdir(dirResults)
-    end    
-    %save results
-    fileName = [dirResults 'weights_lambda' num2str(lambda) '.mat'];
-    fprintf('Saving results in file: \n    %s\n', fileName)    
-    save(fileName, 'weights')
-    dlmwrite([dirResults 'weights_lambda' num2str(lambda) '.txt'],weights,'delimiter','\t');
-    %vts parameter
-    fileName = [dirResults 'vts_lambda' num2str(lambda) '.mat'];
-    fprintf('Saving results in file: \n    %s\n', fileName)    
-    save(fileName, 'vts')
-    dlmwrite([dirResults 'vts_lambda' num2str(lambda) '.txt'],vts,'delimiter','\t');
 
 end
 
