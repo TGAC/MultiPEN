@@ -35,7 +35,7 @@ FS.ranking = n - (R - 1);
 
 
 %% Write feature selection (FS table) to file
-fileName = [outputDir 'Rankings_lambda' num2str(lambda)];
-fprintf('Writing feature selection to file: \n\t%s\n',fileName)
-writetable(FS, [fileName '.txt'], 'delimiter', '\t');
-save([fileName '.mat'], 'FS')
+%fileName = [outputDir 'Rankings_lambda' num2str(lambda)];
+%fprintf('Writing feature selection to file: \n\t%s\n',fileName)
+%writetable(FS, [fileName '.txt'], 'delimiter', '\t');
+%save([fileName '.mat'], 'FS')
