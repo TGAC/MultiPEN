@@ -1,4 +1,4 @@
-function MP = MultiPEN(analysisType, varargin)
+function MP = MultiPEN(analysisType, saveResults, varargin)
 %function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
 %    lambdas, folds, numIter)
 % Function to perform analysis of omics data using MultiPEN and
@@ -68,16 +68,28 @@ end
 
 switch analysisType
     case 'cross_validation'
+        outputDir = 'output_MultiPEN/cross_validation/';
+        
         %cross_validation for different lambdas
         fprintf('Performing cross validation... \n')        
         [~, ~, ~, outcome_stats] = cross_validation(X, E, Y, lambdas, folds, numIter);
         stats = table(outcome_stats(:,1), outcome_stats(:,2), outcome_stats(:,3), outcome_stats(:,4), outcome_stats(:,5), outcome_stats(:,6), ...
             'VariableNames', {'lambda' 'LCC' 'std_LCC' 'selected' 'AUC' 'std_AUC'});
-        writetable(stats, [outputDir 'crossValidationStats.csv'])
-        fprintf('\tStatistics are saved to file: \n\t%s\n', ...
-            [outputDir 'crossValidationStats.csv'])
-        fprintf('Following are the statistics for cross validation\n')
-        display(stats)
+        
+        if saveResults            
+            %check if output directory exists
+            if exist(outputDir, 'dir') ~= 7
+                mkdir(outputDir)
+            end
+            
+            
+            % Statistics for cross validation
+            writetable(stats, [outputDir 'crossValidationStats.csv'])
+            fprintf('\tStatistics are saved to file: \n\t%s\n', ...
+                [outputDir 'crossValidationStats.csv'])
+            fprintf('Following are the statistics for cross validation\n')
+            display(stats)
+        end
         
         MP = outcome_stats;
         
