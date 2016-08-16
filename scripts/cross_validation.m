@@ -52,40 +52,7 @@ function [weights, vts, Fcross, outcome_stats] = ...
 % RAM and 2 GHz CPU. We recommend to use a machine with
 % similar or superior memory and processor configuration.
 
-
-
-%% Read Input Data
-%  Input arguments passed from the system prompt will be received as strings
-%  Thus, converting strings to double if required 
-%X
-if ~isa(X,'double')
-    Xfile = X;     
-    X = load(Xfile, '-ascii');
-end
-%E - interaction matrix (network edges)
-if ~isa(E,'double')
-    Efile = E;    
-    E = load(Efile, '-ascii');
-end
-%class
-if ~isa(Y,'double')
-    Yfile = Y;
-    Y = load(Yfile, '-ascii');
-end
-%lambdas for cross validation
-if ~isa(all_lambdas, 'double')
-    all_lambdas = str2num(all_lambdas);   
-end
-%folds for cross validation
-if ~isa(cvfold, 'double')
-    cvfold = str2num(cvfold);
-end
-%maximum number of iterations for optimisation
-if ~isa(numIter, 'double')
-    numIter = str2num(numIter);
-end
-
-
+%% Show input parameters in screen
 disp('lambdas for cross validation')
 disp(all_lambdas)
 
@@ -106,8 +73,11 @@ A = P + P' - diag(diag(P));
 %% Cross Validation
 % Compute a cross-validation for GenePEN
 F = zeros(length(all_lambdas),6);
-for i = 1:length(all_lambdas)
+% weights has m columns, where m = length(all_lambdas) * cvfold;
+weights = zeros(numel(X(1,:)), length(all_lambdas)*cvfold );
+vts = zeros(1, length(all_lambdas)*cvfold );
 
+for i = 1:length(all_lambdas)
     lambda = all_lambdas(i);
     fprintf('\n ######Lambda: %d\n', lambda)
 
@@ -115,15 +85,13 @@ for i = 1:length(all_lambdas)
     % rand('seed',12345);  %PTR: it is an obsolote use as for MALTAB20015b
     rng('default')  %added by PTR
     
-    
+    % If feature selection, i.e., more than one fold
     if cvfold>1         
         c = cvpartition(Y,'kfold',cvfold);
     end   
 
     Fcross = zeros(cvfold,3);
-
-    weights = zeros(numel(X(1,:)),cvfold);
-    vts = zeros(1,cvfold);
+    
     for j=1:cvfold,
 
             if cvfold==1        
@@ -141,11 +109,13 @@ for i = 1:length(all_lambdas)
             S = find(abs(wt)>1e-8);
             
             % Results for GenePEN
-            weights(:,j) = wt;   %added by PTR
+            %index for the current column considering folds and lambdas
+            indx = j + ((i-1)*cvfold) ;  %added by PTR
+            weights(:,indx) = wt;   %added by PTR
             vts(1,j) = vt;       %added by PTR            
-            weights(abs(wt)<1e-8,j) = 0;
+            weights(abs(wt)<1e-8,indx) = 0;
 
-
+            
             %% Feature Selection
             if (size(S, 1) > 0)
                 [~,p] = largest_component(A(S,S));
