@@ -37,12 +37,12 @@ switch analysisType
             X = varargin{1};
             E = varargin{2};
             Y = varargin{3};
-            lambdas = varargin{4};
-            folds = varargin{5};
+            lambdas = str2num(varargin{4});
+            folds = str2num(varargin{5});
             if length(varargin) == 5
                 numIter = 100;
             else
-                numIter = varargin{6};
+                numIter = str2num(varargin{6});
             end
         end
         
@@ -55,13 +55,13 @@ switch analysisType
             X = varargin{1};
             E = varargin{2};
             Y = varargin{3};
-            lambda = varargin{4};
+            lambda = str2num(varargin{4});
             features = varargin{5};
             samples = varargin{6};
             if length(varargin) == 6
                 numIter = 100;
             else
-                numIter = varargin{7};
+                numIter = str2num(varargin{7});
             end
         end
     otherwise
@@ -100,7 +100,7 @@ if ans
     end
 end
 
-
+whos lambda
 % %lambdas for cross validation
 % exist lambdas 'var'
 % if ans
@@ -140,11 +140,13 @@ end
 
 
 %% ADD PATH TO LIBRARIES
-addpath('Libraries/')
-addpath('Libraries/fastGapFill/')
-addpath('Libraries/gaimc/')
-addpath('Libraries/GenePEN/')
-addpath('Libraries/TFOCS-1.3.1/')
+if ~isdeployed
+    addpath('Libraries/')
+    addpath('Libraries/fastGapFill/')
+    addpath('Libraries/gaimc/')
+    addpath('Libraries/GenePEN/')
+    addpath('Libraries/TFOCS-1.3.1/')
+end
 
 
 %% Analysis
