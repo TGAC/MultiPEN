@@ -44,61 +44,57 @@
   
   #Enrichment for subontology BP (Biological Processes)
   subclassOnt <- "BP"
-  enrichment <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
-  enrichmentSummary <- summary(enrichment)
-  if(nrow(enrichmentSummary)>0){
-    aux <- cbind(enrichmentSummary, "BP")
+  enrichment_BP <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+  enrichmentSummary_BP <- summary(enrichment_BP)
+  head(summary(enrichment_BP))
+  if(nrow(enrichmentSummary_BP)>0){
+    aux <- cbind(enrichmentSummary_BP, "BP")
     colnames(aux)[10]<- 'subontology'
-    enrichmentSummary <- aux
-    head(summary(enrichment))
-    fileName <- paste(outputDir, 'enrichment_BP.pdf', sep = "")
-    pdf(fileName)
-    barplot(enrichment, drop=TRUE, showCategory=20)
-    dev.off()
+    enrichmentSummary_BP <- aux        
   }  
   #add to results: enrichment for BP category
-  results <- enrichmentSummary
+  results <- enrichmentSummary_BP
   
   #Enrichment for subontology MF (Molecular Function)
   subclassOnt <- "MF"
-  enrichment <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
-  enrichmentSummary <- summary(enrichment)
-  if(nrow(enrichmentSummary)>0){
-    aux <- cbind(enrichmentSummary, "MF")
+  enrichment_MF <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+  enrichmentSummary_MF <- summary(enrichment_MF)
+  head(summary(enrichment_MF)) 
+  if(nrow(enrichmentSummary_MF)>0){
+    aux <- cbind(enrichmentSummary_MF, "MF")
     colnames(aux)[10]<- 'subontology'
-    enrichmentSummary <- aux
-    head(summary(enrichment))
-    fileName <- paste(outputDir, 'enrichment_MF.pdf', sep = "")
-    pdf(fileName)
-    barplot(enrichment, drop=TRUE, showCategory=20)
-    dev.off()
+    enrichmentSummary_MF <- aux       
     #add to results: enrichment for BP category
-    results <- rbind(results, enrichmentSummary)
+    results <- rbind(results, enrichmentSummary_MF)
   }  
   
   
   #Enrichment for subclass CC (Cellular Cellular Component)
   subclassOnt <- "CC"
-  enrichment <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
-  enrichmentSummary <- summary(enrichment)
-  if(nrow(enrichmentSummary)>0){
-    aux <- cbind(enrichmentSummary, "CC")
+  enrichment_CC <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+  enrichmentSummary_CC <- summary(enrichment_CC)
+  head(summary(enrichment_CC))
+  if(nrow(enrichmentSummary_CC)>0){
+    aux <- cbind(enrichmentSummary_CC, "CC")
     colnames(aux)[10]<- 'subontology'
-    enrichmentSummary <- aux
-    head(summary(enrichment))
-    fileName <- paste(outputDir, 'enrichment_CC.pdf', sep = "")
-    pdf(fileName)
-    barplot(enrichment, drop=TRUE, showCategory=20)
-    dev.off()
+    enrichmentSummary_CC <- aux
     #add to results: enrichment for BP category
-    results <- rbind(results, enrichmentSummary)
+    results <- rbind(results, enrichmentSummary_CC)
   }
   
   
-  if(nrow(results)>0){
+  #if(nrow(results)>0){
     #write results to file: 
     fileName <- paste(outputDir, "enrichGO_subcategories.txt", sep = "")
     cat(sprintf("writing results to file: %s\n", fileName))
     write.table(results, fileName, sep = '\t', row.names = FALSE)
-  }
+  #}
+  
+  fileName <- paste(outputDir, 'enrichmentGO.pdf', sep = "")
+  pdf(fileName)
+  par(mfcol=c(1,3))
+  barplot(enrichment_BP, drop=TRUE, showCategory=20)
+  barplot(enrichment_MF, drop=TRUE, showCategory=20)
+  barplot(enrichment_CC, drop=TRUE, showCategory=20)
+  dev.off()
   
