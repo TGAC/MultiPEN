@@ -15,7 +15,7 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 
 % INPUTS
 %   analysisType    Options are: 
-%                   'crossValidation', 'featureSelection'
+%                   'cross_validation', 'featureSelection', 'enrichmentGO'
 %                   coming soon: 'GenePEN', 'RandomiseNetwork', 'ErdosRenyi'
 %   outputDir       Output directory
 %   X
@@ -64,6 +64,16 @@ switch analysisType
                 numIter = str2num(varargin{7});
             end
         end
+        
+    case 'enrichmentGO'
+        % enrichmentGO needs parameters:
+        % fileName (output from featureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
+        if ~(length(varargin) == 1)
+            error('The number of arguments is incorrect')
+        else
+            fileName = varargin{1};
+        end
+        
     otherwise
         error('Please specify a valid analysis')
 end
@@ -121,7 +131,7 @@ whos lambda
 % Feature annotation
 exist features 'var'
 if ans
-    if ~isa(features,'double')
+    if ~isa(features,'cell')
         featureAnnotfile = features;           
         features = table2cell(readtable(featureAnnotfile, 'ReadVariableNames', false));
     end
@@ -130,7 +140,7 @@ end
 % Sample annotation
 exist samples 'var'
 if ans
-    if ~isa(samples,'double')
+    if ~isa(samples,'cell')
         samplesFile = samples;           
         samples = table2cell(readtable(samplesFile, 'ReadVariableNames', false));
     end
@@ -150,12 +160,6 @@ end
 
 
 %% Analysis
-
-%If maximum number of iterations is not specified
-if numIter == 0  
-    % set the default value
-    numIter = 3000; 
-end
 
 switch analysisType
     case 'hierarchical_clustering'
@@ -238,5 +242,31 @@ switch analysisType
         end
                        
         MP = FS;
+        
+        
+    case 'enrichmentGO'
+        
+        % output directory 
+        if strcmp(saveResults, 'true')
+            outputDir = 'output_MultiPEN/enrichment-GO/';
+        else
+            outputDir = saveResults;
+        end
+
+        %check if output directory exists
+        if exist(outputDir, 'dir') ~= 7
+            mkdir(outputDir)
+        end
+        
+        % Build string to call the R string enrichmentGO.R  (using Rscript)
+        % syntaxis:
+        % path_to_Rscript script_to_run file_name output_directory
+        callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentGO.R';
+        callToRscript = [callToRscript ' ' fileName ' ' outputDir];
+        system(callToRscript)
+        
+        % Load the table with results
+        MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
+        
 
 end
