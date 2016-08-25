@@ -1,4 +1,4 @@
-function [geneExpression, illuminaProbes, samples, sampleGEO] = loadData()
+function [geneExpression, illuminaProbes, samples, sampleGEO, class] = loadData()
 %% Import data from text file.
 % Script for importing data from the following text file:
 %
@@ -37,6 +37,7 @@ fclose(fileID);
 % Create output variable
 geneExpression = [dataArray{1:end-1}];
 geneExpression(end,:) = [];  % last row has no expression data
+geneExpression = geneExpression';  %n-by-p
 
 % Clear temporary variables
 clearvars startRow formatSpec fileID dataArray ans;
@@ -75,14 +76,14 @@ clearvars startRow formatSpec fileID dataArray ans;
 startRow = 26;
 endRow = 26;
 
-%% Format string for each line of text:
+% Format string for each line of text:
 %   column2: text (%q)
 %	...
 %	column19: text (%q)
 % For more information, see the TEXTSCAN documentation.
 formatSpec = '%*q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%[^\n\r]';
 
-%% Open the text file.
+% Open the text file.
 fileID = fopen(filename,'r');
 
 % Read columns of data according to format string.
@@ -94,6 +95,7 @@ fclose(fileID);
 
 % Create output variable
 samples = [dataArray{1:end-1}];
+samples = samples';
 
 % Clear temporary variables
 clearvars startRow endRow formatSpec fileID dataArray ans;
@@ -104,14 +106,14 @@ clearvars startRow endRow formatSpec fileID dataArray ans;
 startRow = 27;
 endRow = 27;
 
-%% Format string for each line of text:
+% Format string for each line of text:
 %   column2: text (%q)
 %	...
 %	column19: text (%q)
 % For more information, see the TEXTSCAN documentation.
 formatSpec = '%*q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%[^\n\r]';
 
-%% Open the text file.
+% Open the text file.
 fileID = fopen(filename,'r');
 
 % Read columns of data according to format string.
@@ -123,6 +125,34 @@ fclose(fileID);
 
 % Create output variable
 sampleGEO = [dataArray{1:end-1}];
+sampleGEO = sampleGEO';
 
 % Clear temporary variables
 clearvars startRow endRow formatSpec fileID dataArray ans;
+
+
+
+%% CLASS PER SAMPLE
+startRow = 36;
+endRow = 36;
+
+% Format string for each line of text:
+%   column2: text (%q)
+%	column3: text (%q)
+%   ...
+%	column19: text (%q)
+formatSpec = '%*q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%q%[^\n\r]';
+
+% Open the text file.
+fileID = fopen(filename,'r');
+
+% Read columns of data according to format string.
+textscan(fileID, '%[^\n\r]', startRow-1, 'WhiteSpace', '', 'ReturnOnError', false);
+dataArray = textscan(fileID, formatSpec, endRow-startRow+1, 'Delimiter', delimiter, 'ReturnOnError', false);
+
+% Close the text file.
+fclose(fileID);
+
+% Create output variable
+class = [dataArray{1:end-1}];
+class = class';
