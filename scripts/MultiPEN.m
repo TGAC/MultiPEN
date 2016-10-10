@@ -3,7 +3,7 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 %    lambdas, folds, numIter)
 % Function to perform analysis of omics data using MultiPEN and
 % the different type of analysis (specified by parameter 'analysisType')
-% MultiPEN 0.0.2 computes feature selection from transcritpomics and 
+% MultiPEN 0.0.1 computes feature selection from transcritpomics and 
 % metabolomics data
 % Written by Perla Rey, Agust 2016
 %
@@ -168,9 +168,7 @@ switch analysisType
     case 'cross_validation'                
         %cross_validation for different lambdas
         fprintf('Performing cross validation... \n')        
-        [~, ~, ~, outcome_stats] = cross_validation(X, E, Y, lambdas, folds, numIter);
-        stats = table(outcome_stats(:,1), outcome_stats(:,2), outcome_stats(:,3), outcome_stats(:,4), outcome_stats(:,5), outcome_stats(:,6), ...
-            'VariableNames', {'lambda' 'LCC' 'std_LCC' 'selected' 'AUC' 'std_AUC'});
+        [~, ~,stats] = cross_validation(X, E, Y, lambdas, folds, numIter);
         
         if ~strcmp(saveResults,'false')
             if strcmp(saveResults, 'true')
