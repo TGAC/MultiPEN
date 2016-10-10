@@ -1,4 +1,4 @@
-function [weights, vts, stats] = ...
+function [weights, vts, stats, yTest, yTestPred] = ...
     crossValidation(X, E, Y, all_lambdas, cvfold, numIter)
 
 % Supervised sample classification and identification of
@@ -31,6 +31,8 @@ function [weights, vts, stats] = ...
 %   vts  
 %   stats           Number selected features, LCC (avg, std), AUC (avg,
 %                   std), True Positive Rate
+%   yTest           class for the test set in each fold and lambda
+%   yTestPred       predicted class for test set in each fold and lambda
 
 
 %% Show input parameters in screen
@@ -64,6 +66,9 @@ stdAUC = avgAUC;
 avgLCC = avgAUC;
 stdLCC = avgAUC;
 avgsel = avgAUC;
+% Prediction
+yTest = [];
+yTestPred = [];
 
 %% Compute cross-validation per lambda using GenePEN
 for i = 1:length(all_lambdas)
@@ -108,22 +113,26 @@ for i = 1:length(all_lambdas)
               else
                 ypred = ones(1, size(y_pred,1));
               end
-           else
+            else
               ypred = (y_pred - min(y_pred))/(max(y_pred) - min(y_pred));
-           end
-
-           r = tiedrank(ypred);
-           %AUC
-           AUC(j) = (sum(r(y==1)) - sum(y==1) * (sum(y==1)+1)/2) /( sum(y<1) * sum(y==1)); 
-           LCC(j) = sum(p); %size of the largest connected component
-           selected(j) = numel(S); % selected features   
+            end
            
-           disp(' ');
-           disp('Current cycle:');
-           disp(horzcat('Area under the curve (AUC): ',num2str(AUC(j))));
-           disp(horzcat('Selected Features: ',num2str(selected(j))));
-           disp(horzcat('Size of largest connected component (LCC): ',num2str(LCC(j))));
-           disp(' ');       
+            % For analysing prediction
+            yTest(:,end+1) = y;
+            yTestPred(:,end+1) = ypred;
+
+            r = tiedrank(ypred);
+            %AUC
+            AUC(j) = (sum(r(y==1)) - sum(y==1) * (sum(y==1)+1)/2) /( sum(y<1) * sum(y==1)); 
+            LCC(j) = sum(p); %size of the largest connected component
+            selected(j) = numel(S); % selected features   
+
+            disp(' ');
+            disp('Current cycle:');
+            disp(horzcat('Area under the curve (AUC): ',num2str(AUC(j))));
+            disp(horzcat('Selected Features: ',num2str(selected(j))));
+            disp(horzcat('Size of largest connected component (LCC): ',num2str(LCC(j))));
+            disp(' ');       
            
            
     end
