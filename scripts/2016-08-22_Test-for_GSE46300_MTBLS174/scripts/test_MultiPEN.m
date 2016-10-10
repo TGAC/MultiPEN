@@ -101,6 +101,8 @@ for ii=1:numel(gSamples)
 end
 Xgenes = gExpressionTU(indxG,:);
 gClassT = gClass(indxG);
+fileName = 'scripts/2016-08-22_Test-for_GSE46300_MTBLS174/MultiPEN_input-data/combinedClass.txt';
+writetable(cell2table(gClassT), fileName, 'delimiter', '\t');
 %XAnnotation = gSamples(indxG);
 
 % Metabolomics Data
@@ -131,8 +133,32 @@ Y = double(Y);
 %% Run MultiPEN - cross validation
 pathMP = 'scripts/2016-08-22_Test-for_GSE46300_MTBLS174/MultiPEN_output-data/';
 numIter = '100';
+%lambdas = '0.01';
 lambdas = '[0.00001 0.000055 0.0001 0.00055 0.001 0.0055 0.01 0.055 0.1 0.55 1]';
-MP = MultiPEN('cross_validation', pathMP, Xnetwork, E, Y, lambdas, '1', numIter);
+folds = '1';
+
+% gClassT has the 16 samples for both genes and metabolites
+% samples are for three cases: none, low and high steatosis
+
+%% COMPARING: low vs high ONLY 
+pathMP2cond = [pathMP 'low_vs_high/'];
+indx = (strcmp(gClassT,'low') | strcmp(gClassT,'high'));
+XtwoConditions = Xnetwork(indx,:);
+% Y - low is used as control (zero value) and high as case (1)
+Y = strcmp(gClassT(indx), 'high');
+%dlmwrite([outputDir 'Y.txt'], Y, 'delimiter', '\t')
+
+MP = MultiPEN('cross_validation', pathMP2cond, XtwoConditions, E, YtwoConditions, lambdas, folds, numIter);
+
+
+%% COMPARING: (low and none) vs high ONLY 
+pathMP2cond = [pathMP 'low-and-none_vs_high/'];
+% Y - low is used as control (zero value) and high as case (1)
+XtwoConditions = Xnetwork;
+Y = double(strcmp(gClassT, 'high'));
+%dlmwrite([outputDir 'Y.txt'], Y, 'delimiter', '\t')
+
+MP = MultiPEN('cross_validation', pathMP2cond, XtwoConditions, E, Y, lambdas, folds, numIter);
 
 %%
 lambda = '0.0001';
