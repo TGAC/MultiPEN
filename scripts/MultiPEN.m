@@ -163,12 +163,15 @@ end
 
 switch analysisType
     case 'hierarchical_clustering'
-        
+        % test
+        samples={'sample1' 'sample2' 'sample3' 'sample4'};
+        features={'f1' 'f2' 'f3' 'f4' 'f5' 'f6' 'f7'};
+        hierarchicalClustering(X(1:4,1:7), samples, features)
     
     case 'cross_validation'                
         %cross_validation for different lambdas
         fprintf('Performing cross validation... \n')        
-        [~, ~,stats] = cross_validation(X, E, Y, lambdas, folds, numIter);
+        [~, ~,stats, yTest, yTestPred] = crossValidation(X, E, Y, lambdas, folds, numIter);
         
         if ~strcmp(saveResults,'false')
             if strcmp(saveResults, 'true')
