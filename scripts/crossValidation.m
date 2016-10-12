@@ -3,36 +3,38 @@ function [weights, vts, stats, yTest, yTestPred] = ...
 
 % Supervised sample classification and identification of
 % network-grouped predictive features in gene and/or metabolite
-% expression data using GenePEN method
+% expression data using GenePEN (Vlassis N and Glaab E., 
+% Stat. Appl. Genet Mol Biol. 2015, doi: 10.1515/sagmb-2014-0045).
 % 
-% This function runs cross validation on gene expression and/or 
-% metabolite level data, and molecular interaction data for
-% GenePEN 
+% This function runs cross validation on expression data (gene expression 
+% and/or metabolite level data) and a molecular interaction matrix using
+% GenePEN.
 
 % Inputs:
-%   XDataFile       data matrix with rows = samples, columns = features
-%                   (genes and or metabolites)
-%                   assumes that data has been normalised/standardised
-%   YDataFile       class for each sample, i.e., 0 for control, 1 for cases
-%   EDataFile       Interaction matrix, i.e., the network's edge list. 
-%                   Each row specifies an interaction in the format:
-%                   [node node interaction-weight]
+%   X           expression matrix with rows = samples, columns = features
+%               features are genes and/or metabolites
+%               We assume that data has been normalised/standardised
+%   E           Interaction matrix, i.e., the network's edge list. 
+%               Each row specifies an interaction in the format:
+%               [nodeA nodeB interaction-weight]
+%   Y           sample class for each sample: 0 for control, 1 for cases
 %   all_lambdas     select lambda parameters to be used
 %                   (here either a single lambda parameter can be
 %                   specified or multiple lambda parameters can be
 %                   tested) e.g.:
 %                   all_lambdas = logspace(-12,2,num_of_lambdas);  
 %                   all_lambdas = logspace(-0.3,-0.01,num_of_lambdas);
-%   cvfold          the number of cross-validation cycles
-%   numIter         maximum number of itrations for optimisation
+%   cvfold      the number of folds for cross validation
+%   numIter     maximum number of iterations for optimisation
 %       
 % Outputs:
-%   weights
-%   vts  
-%   stats           Number selected features, LCC (avg, std), AUC (avg,
-%                   std), True Positive Rate
-%   yTest           class for the test set in each fold and lambda
-%   yTestPred       predicted class for test set in each fold and lambda
+%   weights     Weights calculated by GenePEN
+%   vts         the intercept
+%   stats       Stats per lambda: 
+%               Number selected features, LCC (avg, std), AUC (avg, std)
+%   yTest       classes for samples in test set (for each fold and lambda)
+%   yTestPred   predicted classes for samples in test set (for each fold
+%               and lambda)
 
 
 %% Show input parameters in screen
@@ -51,7 +53,6 @@ P = sparse(E(:,1),E(:,2),E(:,3),size(X,2),size(X,2),size(E,1));
 
 % convert triangle matrix to symmetric matrix
 A = P + P' - diag(diag(P));
-
 
 %% Weights, vts and stats
 % weights has m columns, where m = length(all_lambdas) * cvfold;
@@ -74,9 +75,8 @@ yTestPred = [];
 for i = 1:length(all_lambdas)
     lambda = all_lambdas(i);
     fprintf('\n ######Lambda: %d\n', lambda)
-
-    % use this line to ensure reproducibility    
-    rng('default')
+      
+    rng('default')   % use this line to ensure reproducibility  
     
     c = cvpartition(Y,'kfold',cvfold);
     
@@ -92,7 +92,7 @@ for i = 1:length(all_lambdas)
             vts(1,j) = vt;       
             weights(abs(wt)<1e-8,indx) = 0;
             
-            % Selected Features (indexes)
+            % (indexes) Selected Features 
             S = find(abs(wt)>1e-8);
 
             % LCC's size
@@ -117,7 +117,7 @@ for i = 1:length(all_lambdas)
               ypred = (y_pred - min(y_pred))/(max(y_pred) - min(y_pred));
             end
            
-            % For analysing prediction
+            % To evaluate prediction
             yTest(:,end+1) = y;
             yTestPred(:,end+1) = ypred;
 
@@ -132,9 +132,7 @@ for i = 1:length(all_lambdas)
             disp(horzcat('Area under the curve (AUC): ',num2str(AUC(j))));
             disp(horzcat('Selected Features: ',num2str(selected(j))));
             disp(horzcat('Size of largest connected component (LCC): ',num2str(LCC(j))));
-            disp(' ');       
-           
-           
+            disp(' ');                 
     end
 
     % performance per lambda
