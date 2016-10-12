@@ -1,11 +1,13 @@
 function MP = MultiPEN(analysisType, saveResults, varargin)
-%function MP = MultiPEN(analysisType, outputDir, X, E, Y, featureNames, ...
-%    lambdas, folds, numIter)
+
 % Function to perform analysis of omics data using MultiPEN and
 % the different type of analysis (specified by parameter 'analysisType')
 % MultiPEN 0.0.1 computes feature selection from transcritpomics and 
-% metabolomics data
+% metabolomics data. 
 % Written by Perla Rey, Agust 2016
+
+% MultiPEN extends the approach proposed by GenePEN (Vlassis N and Glaab E., 
+% Stat. Appl. Genet Mol Biol. 2015, doi: 10.1515/sagmb-2014-0045)
 %
 % It uses following libraries:
 % GenePEN
@@ -15,16 +17,12 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 
 % INPUTS
 %   analysisType    Options are: 
-%                   'crossValidation', 'featureSelection', 'enrichmentGO'
-%                   coming soon: 'GenePEN', 'RandomiseNetwork', 'ErdosRenyi'
-%   saveResults     Output directory
-%   X
-%   E
-%   Y
-%   featureNames
-%   lambdas         specify lambda(s)
-%   folds           for cross validation
-%   numIter         for optimisation, defaults is 100
+%                   'hierarchicalClustering'
+%                   'crossValidation', 'featureSelection'
+%                   coming soon: 'enrichmentGO', 'RandomiseNetwork', 'ErdosRenyi'
+%   saveResults     Possible values are:
+%                   'true' 'false' outputDirectory
+
 
 %% VERIFY INPUT ARGUMENTS
 switch analysisType
