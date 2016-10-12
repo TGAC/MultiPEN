@@ -1,16 +1,15 @@
-function hierarchicalClustering(expression, samples, features, varargin)
+function hierarchicalClustering(expression, samples, features, saveFigure, varargin)
 
 % Plots clustergram for the expression data
 % Inputs:
 %   expression  Expression data, n-by-p, n samples, p features 
 %   samples     Sample Annotation, n-by-1 cell vector
 %   features    Feature Annotation, p-by-1 cell vector
+%   saveFigure  Save figure?: 'true' 'false' outputDirectory
 %   varargin 1  Threshold to filter expression data (exclusive)
 %            2  Title plot
-%            3  Save figure?: 'true' 'false' outputDir
 
 plotTitle = 'Hierarchical Clustering';
-saveFigure = 'true';
 
 if numel(varargin)==3
     %threshold
@@ -19,9 +18,7 @@ if numel(varargin)==3
     expression = expression(:,ind);
     features = features(ind,:); 
     %Title Plot
-    plotTitle = varargin(2);
-    %Save figure
-    saveFigure = varargin(3);
+    plotTitle = varargin(2);    
 end
 
 % Plot hierarchical clustering
@@ -48,7 +45,7 @@ if ~strcmp(saveFigure,'false')
     end
 
     % Statistics for cross validation
-    fileName = [outputDir 'hierarchicalClustering.png'];
+    fileName = [outputDir 'hierarchical_clustering.png'];
     saveas(gcf, fileName)
     fprintf('\tFigure save to file: \n\t%s\n', ...
         fileName)
