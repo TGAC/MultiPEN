@@ -68,8 +68,8 @@ avgLCC = avgAUC;
 stdLCC = avgAUC;
 avgsel = avgAUC;
 % Prediction
-yTest = [];
-yTestPred = [];
+yTest = zeros(numel(Y(:,1)), length(all_lambdas)*cvfold) - 1;
+yTestPred = yTest;
 
 %% Compute cross-validation per lambda using GenePEN
 for i = 1:length(all_lambdas)
@@ -118,8 +118,8 @@ for i = 1:length(all_lambdas)
             end
            
             % To evaluate prediction
-            yTest(:,end+1) = y;
-            yTestPred(:,end+1) = ypred;
+            yTest(1:numel(y),indx) = y;
+            yTestPred(1:numel(y),indx) = ypred;
 
             r = tiedrank(ypred);
             %AUC

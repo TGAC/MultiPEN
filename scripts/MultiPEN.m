@@ -196,7 +196,7 @@ switch analysisType
                         
         end
         
-        MP = outcome_stats;
+        MP = stats;
         
           
     case 'featureSelection'
