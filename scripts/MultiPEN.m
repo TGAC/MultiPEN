@@ -84,17 +84,20 @@ end
 %  Thus, converting strings to double if required 
 
 % X - expression data n-by-p
-exist X 'var'
-if ans
+% check only for the relevant analysis:
+% 'crossValidation' 'featureSelection'
+if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
     if ~isa(X,'double')
         Xfile = X;     
         X = load(Xfile, '-ascii');
     end
 end
- 
+
+
 %E - interaction matrix (network edges)
-exist E 'var'
-if ans
+% check only for the relevant analysis:
+% 'crossValidation' 'featureSelection'
+if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
     if ~isa(E,'double')
         Efile = E;    
         E = load(Efile, '-ascii');
@@ -103,44 +106,32 @@ end
 
 
 %class - Y
-exist Y 'var'
-if ans
+% check only for the relevant analysis:
+% 'crossValidation' 'featureSelection'
+if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
     if ~isa(Y,'double')
         Yfile = Y;
         Y = load(Yfile, '-ascii');
     end
 end
 
-whos lambda
-% %lambdas for cross validation
-% exist lambdas 'var'
-% if ans
-%     if ~isa(lambdas, 'double')
-%         lambdas = str2num(lambdas);   
-%     end
-% end
-
-
-% %folds for cross validation
-% exist folds 'var'
-% if ans
-%     if ~isa(folds, 'double')
-%         folds = str2num(folds);
-%     end
-% end
 
 % Feature annotation
-exist features 'var'
-if ans
+% check only for the relevant analysis:
+% 'featureSelection'
+if strcmp(analysisType,'featureSelection')
     if ~isa(features,'cell')
         featureAnnotfile = features;           
         features = table2cell(readtable(featureAnnotfile, 'ReadVariableNames', false));
     end
 end
 
+
 % Sample annotation
+% check only for the relevant analysis:
+% 'featureSelection'
 exist samples 'var'
-if ans
+if strcmp(analysisType,'featureSelection')
     if ~isa(samples,'cell')
         samplesFile = samples;           
         samples = table2cell(readtable(samplesFile, 'ReadVariableNames', false));
