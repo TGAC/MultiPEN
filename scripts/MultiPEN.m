@@ -50,7 +50,8 @@ switch analysisType
     case 'featureSelection'
         % featureSelection needs parameters:
         %X, E, Y, lambda, features, sampleAnnot, numIter (optional)
-        if ~((length(varargin) == 6) || (length(varargin) == 7))
+        if ~((length(varargin) == 6) || (length(varargin) == 7) || ...
+                (length(varargin) == 8))
             error('The number of arguments is incorrect')
         else
             X = varargin{1};
@@ -59,11 +60,18 @@ switch analysisType
             lambda = str2num(varargin{4});
             features = varargin{5};
             samples = varargin{6};
-            if length(varargin) == 6
-                numIter = 100;
-            else
-                numIter = str2num(varargin{7});
+            switch length(varargin)
+                case 6
+                    D = 0.50;  %decision threshold by default
+                    numIter = 100;
+                case 7
+                    D = str2num(varargin{7});
+                    numIter = 100;
+                case 8
+                    D = str2num(varargin{7});
+                    numIter = str2num(varargin{8});
             end
+            
         end
         
     case 'enrichmentGO'
@@ -130,7 +138,6 @@ end
 % Sample annotation
 % check only for the relevant analysis:
 % 'featureSelection'
-exist samples 'var'
 if strcmp(analysisType,'featureSelection')
     if ~isa(samples,'cell')
         samplesFile = samples;           
@@ -194,7 +201,7 @@ switch analysisType
         %Feature selection for a specific lambda
         fprintf('Performing feature selection... \n')
         %FS is a table with columns: [name, weight, ranking]
-        [FS, vts] = featureSelection(X, E, Y, features, lambda, numIter);
+        [FS, vt, stats] = featureSelection(X, E, Y, features, lambda, numIter, D);
         
         %compute fold change
         [FS, higherControl, higherCases] = foldChange(FS, X, Y, samples);
@@ -221,7 +228,7 @@ switch analysisType
             
             %intercept learnt from feature selection
             fileName = [outputDir 'MultiPEN-vts_lambda' num2str(lambda)];            
-            dlmwrite([fileName '.txt'], vts, 'delimiter', '\t');    
+            dlmwrite([fileName '.txt'], vt, 'delimiter', '\t');    
             
             %% write separate tables for higherControl an higherCases
             fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-control.txt'];
@@ -231,7 +238,11 @@ switch analysisType
             fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-cases.txt'];
             fprintf('Writing feature selection to file: \n\t%s\n',fileName)
             writetable(higherCases, fileName, 'delimiter', '\t');
-            %
+            
+            %% write table with statistics for feature selection accuracy
+            fileName = [outputDir 'MultiPEN-performance_feature-selection_lambda' num2str(lambda) '.txt'];
+            fprintf('Writing performance for feature selection to file: \n\t%s\n',fileName)
+            writetable(stats, fileName, 'delimiter', '\t');
         end
                        
         MP = FS;
