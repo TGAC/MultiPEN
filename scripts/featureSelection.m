@@ -1,4 +1,4 @@
-function [FS, vts] = featureSelection(X, E, Y, featureAnnot, lambda, numIter)
+function [FS, vt, stats] = featureSelection(X, E, Y, featureAnnot, lambda, numIter, D)
 % Feature selection using MultiPEN
 
 
@@ -16,10 +16,7 @@ function [FS, vts] = featureSelection(X, E, Y, featureAnnot, lambda, numIter)
 % numIter 
 
 %% Feature Selection with MultiPEN 
-% (number of folds is set to 1 to use all samples)
-%[weights, ~, ~, ~] = cross_validation(X, E, Y, lambda, folds, numIter, outputDir);
-[weights, vts, ~, ~] = cross_validation(X, E, Y, lambda, 1, numIter);
-weights(weights < 1e-8) = 0;
+[weights, vt] = runGenePEN(X, E, Y, lambda, numIter);
 
 %% Rank the feature selection
 FS = table();
@@ -31,3 +28,7 @@ R = tiedrank(abs(weights));
 % and the minimum absoulute weight has the larges ranking
 n = numel(R);
 FS.ranking = n - (R - 1);
+
+%% Evaluate prediction
+stats = evaluatePrediction(X, Y, E, weights, D);
+display(stats)
