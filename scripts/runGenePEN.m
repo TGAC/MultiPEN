@@ -30,34 +30,3 @@ A = P + P' - diag(diag(P));
 
 [weights, vt] = GenePEN( X, Y, A, lambda, numIter ); 
 weights(abs(weights)<1e-8) = 0;
-
-% % (indexes) Selected Features 
-% S = find(abs(weights)>1e-8);
-% disp(horzcat('Selected Features: ',num2str(numel(S))));
-% 
-% %% Evaluate performance
-% y_pred = X * weights;
-% if (max(y_pred) - min(y_pred) == 0)
-%     if(max(y_pred) < 0)
-%         Ypred = zeros(1, size(y_pred,1));
-%     else
-%         Ypred = ones(1, size(y_pred,1));
-%     end
-% else
-%     Ypred = (y_pred - min(y_pred))/(max(y_pred) - min(y_pred));
-% end
-% 
-% % To evaluate prediction
-% r = tiedrank(Ypred);
-% %AUC
-% auc = (sum(r(Y==1)) - sum(Y==1) * (sum(Y==1)+1)/2) /( sum(Y<1) * sum(Y==1)); 
-% 
-% % LCC's size
-% if (size(S, 1) > 0)
-%     [~,p] = largest_component(A(S,S));
-% else
-%     p = 0;
-% end
-% LCC = sum(p); %size of the largest connected component
-% disp(horzcat('LCC: ',num2str(LCC)));
-% disp(horzcat('auc: ',num2str(auc)));
