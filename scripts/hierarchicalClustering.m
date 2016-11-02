@@ -11,14 +11,17 @@ function hierarchicalClustering(expression, samples, features, saveFigure, varar
 
 plotTitle = 'Hierarchical Clustering';
 
-if numel(varargin)==3
+if numel(varargin)==1
+    %Title Plot
+    plotTitle = varargin(1); 
+end
+
+if numel(varargin)==2
     %threshold
-    threshold = varargin{1};
+    threshold = varargin{2};
     ind = min(expression)>threshold;
     expression = expression(:,ind);
-    features = features(ind,:); 
-    %Title Plot
-    plotTitle = varargin(2);    
+    features = features(ind,:);    
 end
 
 % Plot hierarchical clustering
