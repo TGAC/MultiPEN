@@ -243,6 +243,15 @@ switch analysisType
             fileName = [outputDir 'MultiPEN-performance_feature-selection_lambda' num2str(lambda) '.txt'];
             fprintf('Writing performance for feature selection to file: \n\t%s\n',fileName)
             writetable(stats, fileName, 'delimiter', '\t');
+            
+            %% write file with the parameters used to run feature selection
+            config = table();
+            config.lambda = lambda;
+            config.numIter = numIter;
+            config.decisionThreshold = D;
+            fileName = [outputDir 'MultiPEN-feature-selection_config.txt'];
+            writetable(config, fileName, 'delimiter', '\t');
+            
         end
                        
         MP = FS;
