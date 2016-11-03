@@ -1,9 +1,0 @@
-STEPS to compile the stand alone application for GenePEN
-
-
-
-In MATLAB navigate to the folder “GenePEN_executable”
-
-
-In the command window in MATLAB type:
-	mcc -mv cross_validation.m -a Libraries/ -o CrossValidation
