@@ -20,8 +20,11 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 %                   'hierarchicalClustering'
 %                   'crossValidation', 'featureSelection'
 %                   coming soon: 'enrichmentGO', 'RandomiseNetwork', 'ErdosRenyi'
+%   ED              expression data with feature names and expression per
+%                   sample, it's a p-by-(n+1) table 
+%                   columns are: name, sample1, sample2, ..., sampleN
 %   saveResults     Possible values are:
-%                   'true' 'false' outputDirectory
+%                   'true' 'false' the_output_directory
 
 
 %% VERIFY INPUT ARGUMENTS
@@ -31,12 +34,12 @@ switch analysisType
         
     case 'crossValidation'
         % cross validation needs parameters: 
-        % X, E, Y, lambdas, folds, numIter (optional)
+        % D, E, Y, lambdas, folds, numIter (optional)
         if ~((length(varargin) == 5) || (length(varargin) == 6))
             error('The number of arguments is incorrect')
         else
-            X = varargin{1};
-            E = varargin{2};
+            expData = varargin{1};   %expression data
+            interactionMatrix = varargin{2};
             Y = varargin{3};
             lambdas = str2num(varargin{4});
             folds = str2num(varargin{5});
@@ -49,27 +52,25 @@ switch analysisType
         
     case 'featureSelection'
         % featureSelection needs parameters:
-        %X, E, Y, lambda, features, sampleAnnot, numIter (optional)
-        if ~((length(varargin) == 6) || (length(varargin) == 7) || ...
-                (length(varargin) == 8))
+        % D, E, Y, lambda, decisionThr, numIter (optional)
+        if ~((length(varargin) == 4) || (length(varargin) == 5) || ...
+                (length(varargin) == 6))
             error('The number of arguments is incorrect')
         else
-            X = varargin{1};
-            E = varargin{2};
+            expData = varargin{1};
+            interactionMatrix = varargin{2};
             Y = varargin{3};
-            lambda = str2num(varargin{4});
-            features = varargin{5};
-            samples = varargin{6};
+            lambda = str2double(varargin{4});
             switch length(varargin)
+                case 4  % values by default
+                    decisionThr = 0.50;  %by default decision threshold
+                    numIter = 100;    %by default number of iterations
+                case 5
+                    decisionThr = str2double(varargin{5});
+                    numIter = 100;
                 case 6
-                    D = 0.50;  %decision threshold by default
-                    numIter = 100;
-                case 7
-                    D = str2num(varargin{7});
-                    numIter = 100;
-                case 8
-                    D = str2num(varargin{7});
-                    numIter = str2num(varargin{8});
+                    decisionThr = str2double(varargin{5});
+                    numIter = str2num(varargin{6});
             end
             
         end
@@ -91,61 +92,38 @@ end
 %  Input arguments passed from the system prompt will be received as strings
 %  Thus, converting strings to double if required 
 
-% X - expression data n-by-p
-% check only for the relevant analysis:
-% 'crossValidation' 'featureSelection'
-if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
-    if ~isa(X,'double')
-        Xfile = X;     
-        X = load(Xfile, '-ascii');
+% expression data is a table where:
+%    the rows are the features (genes and/or metabolites)
+%    the columns are the samples
+% expression data can be provided as file or as a table
+if exist('expData', 'var')
+    if ~istable(expData)
+        expData = readtable(expData, 'delimiter', '\t');
     end
+    expression = expData;
+    XAnnotation = expression.name;  % p-by-1  -  the features
+    X = expression;
+    X.name = [];
+    samples = X.Properties.VariableNames';  % n-by-1 
+    X = table2array(X)';  % n-by-p
 end
 
-
-%E - interaction matrix (network edges)
-% check only for the relevant analysis:
-% 'crossValidation' 'featureSelection'
-if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
-    if ~isa(E,'double')
-        Efile = E;    
-        E = load(Efile, '-ascii');
+% E - interaction matrix (network's edges)
+%     matrix can be provided as file or as a table
+if exist('interactionMatrix', 'var')
+    if ~istable(interactionMatrix)
+        interactionMatrix = readtable(interactionMatrix, 'delimiter', '\t');
     end
 end
+    
 
-
-%class - Y
-% check only for the relevant analysis:
-% 'crossValidation' 'featureSelection'
-if strcmp(analysisType,'crossValidation') || strcmp(analysisType,'featureSelection')
+% Y - class per sample
+if exist('Y', 'var')
     if ~isa(Y,'double')
         Yfile = Y;
         Y = load(Yfile, '-ascii');
     end
 end
-
-
-% Feature annotation
-% check only for the relevant analysis:
-% 'featureSelection'
-if strcmp(analysisType,'featureSelection')
-    if ~isa(features,'cell')
-        featureAnnotfile = features;           
-        features = table2cell(readtable(featureAnnotfile, 'ReadVariableNames', false));
-    end
-end
-
-
-% Sample annotation
-% check only for the relevant analysis:
-% 'featureSelection'
-if strcmp(analysisType,'featureSelection')
-    if ~isa(samples,'cell')
-        samplesFile = samples;           
-        samples = table2cell(readtable(samplesFile, 'ReadVariableNames', false));
-    end
-end
-
-
 
 
 %% ADD PATH TO LIBRARIES
@@ -168,7 +146,15 @@ switch analysisType
         hierarchicalClustering(X(1:4,1:7), samples, features)
     
     case 'crossValidation'                
+        % Get subnetwork for  expressionData from interactionMatrix
+        % i.e. use only interactions whose nodes correspond to features
+        % in the expression data
+        fprintf('##############\n')
+        fprintf('Obtaining subnetwork for the expression data ... \n')        
+        E = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        
         %crossValidation for different lambdas
+        fprintf('##############\n')
         fprintf('Performing cross validation... \n')        
         [~, ~,stats, yTest, yTestPred] = crossValidation(X, E, Y, lambdas, folds, numIter);
         
@@ -198,13 +184,23 @@ switch analysisType
         
           
     case 'featureSelection'
+        % Get subnetwork for  expressionData from interactionMatrix
+        % i.e. use only interactions whose nodes correspond to features
+        % in the expression data
+        fprintf('##############\n')
+        fprintf('Obtaining subnetwork for the expression data ... \n')        
+        E = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        
         %Feature selection for a specific lambda
         fprintf('Performing feature selection... \n')
         %FS is a table with columns: [name, weight, ranking]
-        [FS, vt, stats] = featureSelection(X, E, Y, features, lambda, numIter, D);
+        [FS, vt, stats] = featureSelection(X, E, Y, XAnnotation, lambda, numIter, decisionThr);
         
         %compute fold change
         [FS, higherControl, higherCases] = foldChange(FS, X, Y, samples);
+        
+        %sort results by ranking
+        FS = sortrows(FS,{'ranking'},{'ascend'});
         
         % WRITE feature selection (FS table) to file
         if ~strcmp(saveResults,'false')
@@ -248,7 +244,7 @@ switch analysisType
             config = table();
             config.lambda = lambda;
             config.numIter = numIter;
-            config.decisionThreshold = D;
+            config.decisionThreshold = decisionThr;
             fileName = [outputDir 'MultiPEN-feature-selection_config.txt'];
             writetable(config, fileName, 'delimiter', '\t');
             
