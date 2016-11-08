@@ -10,8 +10,10 @@ References
 ## Getting Started
 
 MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime for R2015b in your system. 
+
 1.	Download and save MATLAB Runtime for R2015b for your operative system which can be found from:
 http://www.mathworks.com/products/compiler/mcr/index.html 
+
 2.	Double click the installer and follow the instructions in the installation wizard.
 
 
@@ -23,22 +25,26 @@ A common practice in the machine learning community is to first solve for the  p
 
 ### Syntax
 
-MultiPEN  crossValidation OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations
+**MultiPEN  crossValidation OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations**
 
 ### Description
 
-MultiPEN
-This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
+**MultiPEN** | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
+
 OutputDirectory
 Specify directory for output files.
+
 ExpressionData 
 The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure 1 c).
+
 Interactions 
 The interaction matrix where the ith interaction (row) is represented as:
 A B score
 where A and B are indexes of the connected nodes and score is a number in the range [0,1] representing the interaction confidence score (where 1 corresponds to the maximum level of confidence). An example is shown in Figure 1 b).
+
 SampleClass 
 For each sample specify if control (0) or case (1). An example of this file is shown in Figure 1 a) where each row contains the class for one sample. 
+
 lambdas
 Set of lambdas to test for cross validation. If wanting to test more than one lambda, specify the lambdas by using the notation (include the quotation mark symbols): 
 “[lambda1 lambda2 … lambda3]”
@@ -46,6 +52,7 @@ For example, if we want to try two lambdas, namely 0.02 and 0.2, we would specif
 
 Folds
 For cross validation.
+
 NumIterations
 Maximum number of iterations for the optimisation solver. Default value is 100.
 
