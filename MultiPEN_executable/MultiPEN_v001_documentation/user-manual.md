@@ -77,10 +77,10 @@ Next, run Cross Validation with the following command:
 $MultiPEN crossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda $Folds $NumIter
 ```
 
-To test more than one lambda one can specify the lambdas by using the notation (include the quotation mark symbols): 
+To test more than one lambda one can specify the lambdas by using the notation (include the quotation mark and square bracket symbols): 
 “[lambda1 lambda2 … lambda3]”
 
-For example, if we want to try two lambdas, namely 0.02 and 0.2, we would use the following command:
+For example, if we want to try two lambdas, 0.02 and 0.2, we would use the following command:
 
 ```
 $MultiPEN crossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.02 0.2]" $Folds $NumIter
