@@ -29,6 +29,7 @@ A common practice in the machine learning community is to first solve for the  p
 
 ### Description
 
+-----
 **MultiPEN** | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
 
 **OutputDirectory** | Specify directory for output files.
@@ -46,6 +47,7 @@ A common practice in the machine learning community is to first solve for the  p
 **Folds** | For cross validation.
 
 **NumIterations** | Maximum number of iterations for the optimisation solver. Default value is 100.
+-----
 
 ![example inputs](images/figure-example-input-files.png)
 
