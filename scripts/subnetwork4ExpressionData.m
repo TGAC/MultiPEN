@@ -50,3 +50,8 @@ for ii = 1: numel(network(:,1))
         E(end+1,:) = [index1 index2 w]; 
     end
 end
+
+%% Display information
+fprintf('Original Network has %i interactions \n', numel(network.source))
+fprintf('of which %i include interactions for the expression data \n', numel(E(:,1)))
+fprintf('\n')
