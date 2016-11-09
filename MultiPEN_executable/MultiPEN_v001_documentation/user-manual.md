@@ -21,11 +21,11 @@ http://www.mathworks.com/products/compiler/mcr/index.html
 
 ## Cross Validation
 
-A common practice in the machine learning community is to first solve for the  parameter that optimises the logistic regression problem in equation 1 for your specific data. In MultiPEN, the module to precisely do that is crossValidation. 
+A common practice in the machine learning community is to first solve for the  parameter that optimises the logistic regression problem in equation 1 for your specific data. In MultiPEN, the module to precisely do that is Cross Validation. 
 
 ### Syntax
 
-*MultiPEN*  **crossValidation** *OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations*
+*MultiPEN*  **CrossValidation** *OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations*
 
 
 ### Description
@@ -74,7 +74,7 @@ Note that in this example we are using the example files provided with the appli
 Next, run Cross Validation with the following command:
 
 ```
-$MultiPEN crossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda $Folds $NumIter
+$MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda $Folds $NumIter
 ```
 
 To test more than one lambda one can specify the lambdas by using the notation (include the quotation mark and square bracket symbols): 
@@ -83,5 +83,89 @@ To test more than one lambda one can specify the lambdas by using the notation (
 For example, if we want to try two lambdas, 0.02 and 0.2, we would use the following command:
 
 ```
-$MultiPEN crossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.02 0.2]" $Folds $NumIter
+$MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.02 0.2]" $Folds $NumIter
 ```
+
+
+
+## Feature Selection
+
+After selecting the best lambda parameter to optimise the logistic regression problem, feature selection performs the ranking of all features (both genes and metabolites or a combination of genes and metabolites) based on their expression (genes) and/or levels (metabolites).
+
+
+### Syntax
+
+*MultiPEN* **featureSelection** *OutputDirectory ExpressionData Interactions SampleClass lambda DecisionThreshold NumIterations*
+
+
+### Description
+
+
+Parameter | Description
+----------|-------------
+*MultiPEN* | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
+*OutputDirectory* | Specify directory for output files.
+*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure 1 c).
+*Interactions* |  The interaction matrix where the ith interaction (row) is represented as: [source target score] where *source* and *target* are names (symbolID for genes and CHEBI IDs for metabolites) of the connected nodes and *score* is a number in the range [0,1] representing the interaction confidence (where 1 corresponds to the maximum level of confidence). An example is shown in Figure 1 b).
+*SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure 1 a) where each row contains the class for one sample. 
+*lambda* | This is the lambda for feature selection. 
+*DecisionThreshold* | The decision threshold is set to 0.5 by default. However, if want to test another value specify it here.
+*NumIterations* | Maximum number of iterations for the optimisation solver. Default value is 100.
+
+
+
+### Feature Selection's Output Files
+
+
+File | Description
+-----|------------
+MultiPEN-Rankings_lambdaX(.mat/.txt) | Ranking of features for the corresponding lambda X
+MultiPEN-Rankings_lambda0.001_genes-higher-in-cases.txt | Ranking of features which includes only features with higher expression in cases samples.
+MultiPEN-Rankings_lambda0.001_genes-higher-in-control.txt | Ranking of features which includes only features with higher expression in control samples.
+MultiPEN-vts_lambda0.001.txt | Intercept term (logistic regression model)
+MultiPEN-performance_feature-selection_lambda0.001.txt | LCC, auc, accuracy, TP, TN, FP, FN
+MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision threshold
+
+
+
+MultiPEN-Rankings_lambdaX(.mat/.txt) 
+
+Column | Column Name | Description | Example (row 4 in Figure 2)
+-------|-------------|-------------|-----------------------------
+1 | name | Feature (gene and/or metabolite) name | PPOX
+2 | weight | This is the weight learned by MultiPEN and it is a number in the range [-1,1]. | 0.00290391
+3 | ranking | Ranking according to the absolute weight, where ranking 1 corresponds to the most significant feature for the model. | 3
+4 | foldChange | Fold change to determine the expression change from control to cases. | 1.1735
+5 | higherIn | The average expression is higher in case or control. | case
+6 | sample_1 | First sample | case1
+… | … | … | …
+n+5 (n is the number of samples) | sample_n | Last sample | control7
+
+The figure shows an example of the rankings file created with the feature selection module.
+
+[!example output rankings](images/example_output_rankings.png)
+
+
+
+### Example - OS
+
+*Using default decision threshold and number of iterations.*
+
+In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., binary-OS/MultiPEN_v001_OS/. Then create variables for the paths to stand-alone application, output directory and input files by typing:
+
+```
+MultiPEN="MultiPEN.app/Contents/MacOS/applauncher"
+OutputDirectory="ExampleOutputs/"
+ExpressionData="ExampleInputs/X.txt"
+Interactions="ExampleInputs/E.txt"
+SampleClass="ExampleInputs/Y.txt"
+lambda=0.001
+```
+
+
+Next, run feature selection with the following command:
+
+```
+$MultiPEN FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
+```
+
