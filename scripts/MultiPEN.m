@@ -220,7 +220,6 @@ switch analysisType
             fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda)];
             fprintf('Writing feature selection to file: \n\t%s\n',fileName)
             writetable(FS, [fileName '.txt'], 'delimiter', '\t');
-            save([fileName '.mat'], 'FS')
             
             %intercept learnt from feature selection
             fileName = [outputDir 'MultiPEN-vts_lambda' num2str(lambda)];            
