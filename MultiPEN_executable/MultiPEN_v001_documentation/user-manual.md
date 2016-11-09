@@ -149,7 +149,7 @@ n+5 (n is the number of samples) | sample_n | Last sample | control7
 
 The figure shows an example of the rankings file created with the feature selection module.
 
-[!example output rankings](images/example_output_rankings.png)
+![example output rankings](images/example_output_rankings.png)
 
 
 **MultiPEN-Rankings_lambda0.001_genes-higher-in-cases.txt** and **MultiPEN-Rankings_lambda0.001_genes-higher-in-control.txt**
