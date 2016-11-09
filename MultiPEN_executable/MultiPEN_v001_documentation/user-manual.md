@@ -78,7 +78,7 @@ $MultiPEN crossValidation $OutputDirectory $ExpressionData $Interactions $Sample
 ```
 
 To test more than one lambda one can specify the lambdas by using the notation (include the quotation mark and square bracket symbols): 
-“[lambda1 lambda2 … lambda3]”
+“[lambda1 lambda2 … lambdaN]”
 
 For example, if we want to try two lambdas, 0.02 and 0.2, we would use the following command:
 
