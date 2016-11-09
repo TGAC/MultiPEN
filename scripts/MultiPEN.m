@@ -18,7 +18,7 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 % INPUTS
 %   analysisType    Options are: 
 %                   'hierarchicalClustering'
-%                   'crossValidation', 'featureSelection'
+%                   'CrossValidation', 'FeatureSelection'
 %                   coming soon: 'enrichmentGO', 'RandomiseNetwork', 'ErdosRenyi'
 %   ED              expression data with feature names and expression per
 %                   sample, it's a p-by-(n+1) table 
@@ -32,7 +32,7 @@ switch analysisType
     case 'hierarchicalClustering'
         
         
-    case 'crossValidation'
+    case 'CrossValidation'
         % cross validation needs parameters: 
         % D, E, Y, lambdas, folds, numIter (optional)
         if ~((length(varargin) == 5) || (length(varargin) == 6))
@@ -50,8 +50,8 @@ switch analysisType
             end
         end
         
-    case 'featureSelection'
-        % featureSelection needs parameters:
+    case 'FeatureSelection'
+        % FeatureSelection needs parameters:
         % D, E, Y, lambda, decisionThr, numIter (optional)
         if ~((length(varargin) == 4) || (length(varargin) == 5) || ...
                 (length(varargin) == 6))
@@ -77,7 +77,7 @@ switch analysisType
         
     case 'enrichmentGO'
         % enrichmentGO needs parameters:
-        % fileName (output from featureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
+        % fileName (output from FeatureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
         if ~(length(varargin) == 1)
             error('The number of arguments is incorrect')
         else
@@ -145,7 +145,7 @@ switch analysisType
         features={'f1' 'f2' 'f3' 'f4' 'f5' 'f6' 'f7'};
         hierarchicalClustering(X(1:4,1:7), samples, features)
     
-    case 'crossValidation'                
+    case 'CrossValidation'                
         % Get subnetwork for  expressionData from interactionMatrix
         % i.e. use only interactions whose nodes correspond to features
         % in the expression data
@@ -153,14 +153,14 @@ switch analysisType
         fprintf('Obtaining subnetwork for the expression data ... \n')        
         E = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
         
-        %crossValidation for different lambdas
+        %CrossValidation for different lambdas
         fprintf('##############\n')
         fprintf('Performing cross validation... \n')        
         [~, ~,stats, yTest, yTestPred] = crossValidation(X, E, Y, lambdas, folds, numIter);
         
         if ~strcmp(saveResults,'false')
             if strcmp(saveResults, 'true')
-                outputDir = 'output_MultiPEN/crossValidation/';
+                outputDir = 'output_MultiPEN/CrossValidation/';
             else
                 outputDir = saveResults;
             end
@@ -183,7 +183,7 @@ switch analysisType
         MP = stats;
         
           
-    case 'featureSelection'
+    case 'FeatureSelection'
         % Get subnetwork for  expressionData from interactionMatrix
         % i.e. use only interactions whose nodes correspond to features
         % in the expression data
