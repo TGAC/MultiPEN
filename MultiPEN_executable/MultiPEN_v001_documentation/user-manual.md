@@ -48,6 +48,8 @@ Parameter | Description
 
 ### Cross Validation Output Files
 
+Cross Validation produces one ouput file:
+
 File | Description
 -----|------------
 cross-validation_statst.txt | Statistics for tests which include, for each lambda, the size of the largest connected component (LCC), the standard deviation of the largest connected component (std_LCC), the number of selected features (selected, i.e., features which weights are different to zero), area under the curve (AUC), and the standard deviation of the area under the curve (std_AUC).
@@ -90,12 +92,12 @@ $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $Sample
 
 ## Feature Selection
 
-After selecting the best lambda parameter to optimise the logistic regression problem, feature selection performs the ranking of all features (both genes and metabolites or a combination of genes and metabolites) based on their expression (genes) and/or levels (metabolites).
+After selecting the best lambda parameter to optimise the logistic regression problem, feature selection performs the ranking of all features (genes and/or metabolites) based on their expression (genes) and/or levels (metabolites).
 
 
 ### Syntax
 
-*MultiPEN* **featureSelection** *OutputDirectory ExpressionData Interactions SampleClass lambda DecisionThreshold NumIterations*
+*MultiPEN* **FeatureSelection** *OutputDirectory ExpressionData Interactions SampleClass lambda DecisionThreshold NumIterations*
 
 
 ### Description
@@ -108,27 +110,31 @@ Parameter | Description
 *ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure 1 c).
 *Interactions* |  The interaction matrix where the ith interaction (row) is represented as: [source target score] where *source* and *target* are names (symbolID for genes and CHEBI IDs for metabolites) of the connected nodes and *score* is a number in the range [0,1] representing the interaction confidence (where 1 corresponds to the maximum level of confidence). An example is shown in Figure 1 b).
 *SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure 1 a) where each row contains the class for one sample. 
-*lambda* | This is the lambda for feature selection. 
+*lambda* | This is the lambda parameter that optimises the logistic regression problem for your specific data. Different lambdas can be tested using cross valiation, then selecting the value that provides better results (in terms of the size of the largest connected component, accuracy or area under the curve).  
 *DecisionThreshold* | The decision threshold is set to 0.5 by default. However, if want to test another value specify it here.
 *NumIterations* | Maximum number of iterations for the optimisation solver. Default value is 100.
 
 
 
-### Feature Selection's Output Files
+### Feature Selection Output Files
 
+Feature selection produces six output files: 
 
 File | Description
 -----|------------
-MultiPEN-Rankings_lambdaX(.mat/.txt) | Ranking of features for the corresponding lambda X
-MultiPEN-Rankings_lambda0.001_genes-higher-in-cases.txt | Ranking of features which includes only features with higher expression in cases samples.
-MultiPEN-Rankings_lambda0.001_genes-higher-in-control.txt | Ranking of features which includes only features with higher expression in control samples.
-MultiPEN-vts_lambda0.001.txt | Intercept term (logistic regression model)
-MultiPEN-performance_feature-selection_lambda0.001.txt | LCC, auc, accuracy, TP, TN, FP, FN
+MultiPEN-Rankings_lambdaX.txt | Ranking of features for the corresponding lambda X
+MultiPEN-Rankings_lambdaX_genes-higher-in-cases.txt | Ranking of features which includes only features with higher expression in cases samples.
+MultiPEN-Rankings_lambdaX_genes-higher-in-control.txt | Ranking of features which includes only features with higher expression in control samples.
+MultiPEN-vts_lambdaX.txt | Intercept term (logistic regression model)
+MultiPEN-performance_feature-selection_lambdaX.txt | LCC, auc, accuracy, TP, TN, FP, FN
 MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision threshold
 
 
 
-MultiPEN-Rankings_lambdaX(.mat/.txt) 
+**MultiPEN-Rankings_lambdaX.txt**
+
+This tabular file contains the results for the features selection. The first five columns contain the list of features, weight, ranking, fold change and the class where the feature had higher vote.  The last columns correspond to the expression data. The columns are defined as follows:
+
 
 Column | Column Name | Description | Example (row 4 in Figure 2)
 -------|-------------|-------------|-----------------------------
@@ -144,6 +150,19 @@ n+5 (n is the number of samples) | sample_n | Last sample | control7
 The figure shows an example of the rankings file created with the feature selection module.
 
 [!example output rankings](images/example_output_rankings.png)
+
+
+**MultiPEN-Rankings_lambda0.001_genes-higher-in-cases.txt** and **MultiPEN-Rankings_lambda0.001_genes-higher-in-control.txt**
+
+These tabular files contain the ranking of features which includes only features with higher expression in cases samples and control samples separately. 
+
+
+**MultiPEN-vts_lambda0.001.txt**
+Intercept term (logistic regression model)
+
+
+MultiPEN-performance_feature-selection_lambda0.001.txt | LCC, auc, accuracy, TP, TN, FP, FN
+MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision threshold
 
 
 
