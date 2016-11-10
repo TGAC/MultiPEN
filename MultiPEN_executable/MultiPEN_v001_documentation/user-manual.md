@@ -46,7 +46,7 @@ Parameter | Description
 *ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure c).
 *Interactions* |  The interaction matrix where the ith interaction (row) is represented as: [source target score] where *source* and *target* are names (symbolID for genes and CHEBI IDs for metabolites) of the connected nodes and *score* is a number in the range [0,1] representing the interaction confidence (where 1 corresponds to the maximum level of confidence). An example is shown in Figure b).
 *SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure a) where each row contains the class for one sample. 
-*lambdas* | Set of lambdas to test for cross validation. If wanting to test more than one lambda, specify the lambdas by using the notation (include the quotation mark symbols): “[lambda1 lambda2 … lambdaN]”. For example, if we want to try two lambdas, namely 0.02 and 0.2, we would specify it with: “[0.02 0.2]”.
+*lambdas* | Set of lambdas to test for cross validation. If you are wanting to test more than one lambda, specify the lambdas by using the notation (include the quotation mark symbols): “[lambda1 lambda2 … lambdaN]”. For example, if we want to try two lambdas, namely 0.02 and 0.2, we would specify it with: “[0.02 0.2]”.
 *Folds* | Specify the number of partitions for cross validation.
 *NumIterations* | Maximum number of iterations for the optimisation solver. Default value is 100.
 
@@ -61,7 +61,7 @@ Cross Validation produces one ouput file:
 
 File | Description
 -----|------------
-cross-validation_statst.txt | Statistics for tests which include, for each lambda, the size of the largest connected component (LCC), the standard deviation of the largest connected component (std_LCC), the number of selected features (selected, i.e., features which weights are different to zero), area under the curve (AUC), and the standard deviation of the area under the curve (std_AUC).
+cross-validation_stats.txt | Statistics for tests which include, for each lambda, the size of the largest connected component (LCC), the standard deviation of the largest connected component (std_LCC), the number of selected features (selected, i.e., features which weights are different to zero), area under the curve (AUC), and the standard deviation of the area under the curve (std_AUC).
 
 
 
@@ -80,7 +80,7 @@ Folds=3
 NumIter=100
 ```
 
-Note that in this example we are using the example files provided with the application. All the files used as example as located in the folder: ExampleInputs/.
+Note that in this example we are using the example files provided with the application. All the files used for the example are located in the folder: ExampleInputs/.
 
 Next, run Cross Validation with the following command:
 
