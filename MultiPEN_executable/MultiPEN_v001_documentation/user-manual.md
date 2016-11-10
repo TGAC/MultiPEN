@@ -2,7 +2,7 @@
 
 MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. This approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
 
-[Getting Started](#Getting Started)
+[Getting Started](#Getting-Started)
 
 [Cross Validation](#Cross-Validation)
 
@@ -32,7 +32,7 @@ The tool can analyse gene expression data and/or metabolomics data. The first st
 The following sections describe these modules.
 
 
-# Cross-Validation
+# Cross Validation
 
 A common practice in the machine learning community is to first solve for the parameter that optimises the logistic regression problem in Equation 1 for your specific data. In MultiPEN, the module to do precisely that is CrossValidation. 
 
