@@ -2,9 +2,13 @@
 
 MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. This approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
 
-[Getting Started](#getting-started)
+- [Getting Started](#getting-started)
 
-[Cross Validation](#cross-validation)
+- [The Workflow](#the-workflow)
+
+  - [Cross Validation](#cross-validation)
+
+  - [Feature Selection](#feature-selection)
 
 [References](#references)
 
@@ -20,7 +24,7 @@ http://www.mathworks.com/products/compiler/mcr/index.html
 
 
  
-## Data Analysis - The Workflow
+# The Workflow
 
 The tool can analyse gene expression data and/or metabolomics data. The first step is to compile a molecular network for which we use StringDB [2][3] and Pathway Commons [4]. 
 
@@ -36,12 +40,12 @@ The following sections describe these modules.
 
 A common practice in the machine learning community is to first solve for the parameter that optimises the logistic regression problem in Equation 1 for your specific data. In MultiPEN, the module to do precisely that is CrossValidation. 
 
-#### Syntax
+### Syntax
 
 *MultiPEN*  **CrossValidation** *OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations*
 
 
-#### Description
+### Description
 
 
 Parameter | Description
@@ -60,7 +64,7 @@ Parameter | Description
 *Examples of input files: a) File containing the class for each sample, 0 for control and 1 for cases, b) File containing the interaction matrix, c) Example of a file containing expression data*
 
 
-#### Cross Validation Output Files
+### Cross Validation Output Files
 
 Cross Validation produces one ouput file:
 
@@ -70,7 +74,7 @@ cross-validation_stats.txt | Statistics for tests which include, for each lambda
 
 
 
-#### Example - OS
+### Example - OS
 
 In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., binary-OS/MultiPEN_v001_OS/. Then create variables for the paths to stand-alone application, output directory and input files by typing:
 
@@ -104,17 +108,17 @@ $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $Sample
 
 
 
-### Feature Selection
+## Feature Selection
 
 After selecting the best lambda parameter to optimise the logistic regression problem, feature selection performs the ranking of all features (genes and/or metabolites) based on their expression (genes) and/or levels (metabolites).
 
 
-#### Syntax
+### Syntax
 
 *MultiPEN* **FeatureSelection** *OutputDirectory ExpressionData Interactions SampleClass lambda DecisionThreshold NumIterations*
 
 
-#### Description
+### Description
 
 
 Parameter | Description
@@ -130,7 +134,7 @@ Parameter | Description
 
 
 
-#### Feature Selection Output Files
+### Feature Selection Output Files
 
 Feature selection produces six output files: 
 
@@ -180,7 +184,7 @@ MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision t
 
 
 
-#### Example - OS
+### Example - OS
 
 *Using default decision threshold and number of iterations.*
 
@@ -203,7 +207,7 @@ $MultiPEN FeatureSelection $OutputDirectory $ExpressionData $Interactions $Sampl
 ```
 
 
-#### Running example script for feature selection
+### Running example script for feature selection
 
 To run the script provided as example with all the default parameters, use the command:
 
