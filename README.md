@@ -1,6 +1,6 @@
 # MultiPEN
 
-MultiPEN is a tool for the analysis of multi-omics data. We are developing the first version 0.0.1 which provides tools to analyse transcriptomics and metabolomics data. We are extending an approach based on a regularised logistic regression model [1] that uses a biological network as a priori knowledge.
+MultiPEN is a tool for the analysis of multi-omics data. We are developing our first version which will include a tool to analyse transcriptomics and metabolomics data. We are extending an approach based on a regularised logistic regression model [1] that uses a biological network as a priori knowledge.
 
 
 ### Using the Application
