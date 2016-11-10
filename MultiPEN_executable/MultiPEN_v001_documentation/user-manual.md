@@ -17,7 +17,7 @@ http://www.mathworks.com/products/compiler/mcr/index.html
  
 ## Data Analysis - The Workflow
 
-The tool can analyse gene expression data and/or metabolomics data. The first step is to compile a molecular network for which we use StringDB [2] and Pathway Commons [3]. 
+The tool can analyse gene expression data and/or metabolomics data. The first step is to compile a molecular network for which we use StringDB [2][3] and Pathway Commons [4]. 
 
 
 
@@ -211,6 +211,8 @@ References
 
 [1] GenePEN: analysis of network activity alterations in complex diseases via the pairwise elastic net., Vlassis N, Glaab E., Stat Appl Genet Mol Biol. 2015 Apr;14(2):221-4. doi: 10.1515/sagmb-2014-0045.
 
-[2] StringDB
+[2] STRING v10: protein-protein interaction networks, integrated over the tree of life, Szklarczyk D, Franceschini A, Wyder S, Forslund K, Heller D, Huerta-Cepas J, Simonovic M, Roth A, Santos A, Tsafou KP, Kuhn M, Bork P, Jensen LJ, von Mering C., Nucleic Acids Res. 2015 Jan; 43:D447-52.
 
-[3] Pathway Commons
+[3] STRING: a web-server to retrieve and display the repeatedly occurring neighbourhood of a gene, Snel B, Lehmann G, Bork P, Huynen MA., Nucleic Acids Res. 2000 Sep 15;28(18):3442-4.
+
+[4] Pathway Commons, a web resource for biological pathway data, Cerami E et al., Nucleic Acids Research (2011).
