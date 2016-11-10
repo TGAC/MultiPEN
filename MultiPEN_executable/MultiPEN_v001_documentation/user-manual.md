@@ -1,6 +1,6 @@
 # MultiPEN
 
-MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes, namely control and cases [1]. Such approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
+MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. Such approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
 
 References
 
@@ -188,3 +188,11 @@ Next, run feature selection with the following command:
 $MultiPEN FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
 ```
 
+
+### Running example script for feature selection
+
+To run the script provided as example with all the default parameters, use the command:
+
+```
+./example_feature_selection.sh 
+```
