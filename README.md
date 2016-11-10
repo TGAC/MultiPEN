@@ -7,7 +7,7 @@ MultiPEN is a tool for the analysis of multi-omics data. We are developing our f
 
 MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime:
 
-1. Download and save MATLAB Runtime for R2015b for your operative system [here](http://www.mathworks.com/products/compiler/mcr/index.html). 
+1. Download and save MATLAB Runtime for R2015b for your operating system [here](http://www.mathworks.com/products/compiler/mcr/index.html). 
 
 2. Double click the installer and follow the instructions in the installation wizard.
 
