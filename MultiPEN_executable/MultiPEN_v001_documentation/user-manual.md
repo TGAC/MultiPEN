@@ -4,7 +4,7 @@ MultiPEN uses a penalised logistic regression approach to find a subset of featu
 
 [Getting Started](#Getting Started)
 
-[Cross Validation](#Cross Validation)
+[Cross Validation](#Cross-Validation)
 
 [References](#References)
 
@@ -212,7 +212,7 @@ To run the script provided as example with all the default parameters, use the c
 ```
 
 
-## References
+# References
 
 [1] GenePEN: analysis of network activity alterations in complex diseases via the pairwise elastic net., Vlassis N, Glaab E., Stat Appl Genet Mol Biol. 2015 Apr;14(2):221-4. doi: 10.1515/sagmb-2014-0045.
 
