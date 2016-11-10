@@ -1,52 +1,61 @@
 # MultiPEN
 
-MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. Such approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
+MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. This approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
 
-References
-
-[1] GenePEN: analysis of network activity alterations in complex diseases via the pairwise elastic net., Vlassis N, Glaab E., Stat Appl Genet Mol Biol. 2015 Apr;14(2):221-4. doi: 10.1515/sagmb-2014-0045.
 
 
 ## Getting Started
 
-MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime for R2015b in your system. 
+MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime for R2015b in your system. To install MATLAB Runtime: 
 
-1.	Download and save MATLAB Runtime for R2015b for your operative system which can be found from:
+1.	Download and save MATLAB Runtime for R2015b for your operating system which can be found from:
 http://www.mathworks.com/products/compiler/mcr/index.html 
 
 2.	Double click the installer and follow the instructions in the installation wizard.
 
 
+ 
+## Data Analysis - The Workflow
+
+The tool can analyse gene expression data and/or metabolomics data. The first step is to compile a molecular network for which we use StringDB [2] and Pathway Commons [3]. 
 
 
-## Cross Validation
 
-A common practice in the machine learning community is to first solve for the  parameter that optimises the logistic regression problem in equation 1 for your specific data. In MultiPEN, the module to precisely do that is Cross Validation. 
+![MultiPEN workflow](images/MultiPEN_workflow.png)
+*The workflow to analyse omics data with MultiPEN*
 
-### Syntax
+The following sections describe these modules.
+
+
+### Cross Validation
+
+A common practice in the machine learning community is to first solve for the parameter that optimises the logistic regression problem in Equation 1 for your specific data. In MultiPEN, the module to do precisely that is CrossValidation. 
+
+#### Syntax
 
 *MultiPEN*  **CrossValidation** *OutputDirectory ExpressionData Interactions SampleClass lambdas Folds NumIterations*
 
 
-### Description
+#### Description
 
 
 Parameter | Description
 ----------|-------------
 *MultiPEN* | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
 *OutputDirectory* | Specify directory for output files.
-*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure 1 c).
-*Interactions* |  The interaction matrix where the ith interaction (row) is represented as: [source target score] where *source* and *target* are names (symbolID for genes and CHEBI IDs for metabolites) of the connected nodes and *score* is a number in the range [0,1] representing the interaction confidence (where 1 corresponds to the maximum level of confidence). An example is shown in Figure 1 b).
-*SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure 1 a) where each row contains the class for one sample. 
+*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure c).
+*Interactions* |  The interaction matrix where the ith interaction (row) is represented as: [source target score] where *source* and *target* are names (symbolID for genes and CHEBI IDs for metabolites) of the connected nodes and *score* is a number in the range [0,1] representing the interaction confidence (where 1 corresponds to the maximum level of confidence). An example is shown in Figure b).
+*SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure a) where each row contains the class for one sample. 
 *lambdas* | Set of lambdas to test for cross validation. If wanting to test more than one lambda, specify the lambdas by using the notation (include the quotation mark symbols): “[lambda1 lambda2 … lambdaN]”. For example, if we want to try two lambdas, namely 0.02 and 0.2, we would specify it with: “[0.02 0.2]”.
 *Folds* | Specify the number of partitions for cross validation.
 *NumIterations* | Maximum number of iterations for the optimisation solver. Default value is 100.
 
 
 ![example inputs](images/input-example-files.png)
+*Examples of input files: a) File containing the class for each sample, 0 for control and 1 for cases, b) File containing the interaction matrix, c) Example of a file containing expression data*
 
 
-### Cross Validation Output Files
+#### Cross Validation Output Files
 
 Cross Validation produces one ouput file:
 
@@ -56,7 +65,7 @@ cross-validation_statst.txt | Statistics for tests which include, for each lambd
 
 
 
-### Example - OS
+#### Example - OS
 
 In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., binary-OS/MultiPEN_v001_OS/. Then create variables for the paths to stand-alone application, output directory and input files by typing:
 
@@ -90,17 +99,17 @@ $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $Sample
 
 
 
-## Feature Selection
+### Feature Selection
 
 After selecting the best lambda parameter to optimise the logistic regression problem, feature selection performs the ranking of all features (genes and/or metabolites) based on their expression (genes) and/or levels (metabolites).
 
 
-### Syntax
+#### Syntax
 
 *MultiPEN* **FeatureSelection** *OutputDirectory ExpressionData Interactions SampleClass lambda DecisionThreshold NumIterations*
 
 
-### Description
+#### Description
 
 
 Parameter | Description
@@ -116,7 +125,7 @@ Parameter | Description
 
 
 
-### Feature Selection Output Files
+#### Feature Selection Output Files
 
 Feature selection produces six output files: 
 
@@ -166,7 +175,7 @@ MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision t
 
 
 
-### Example - OS
+#### Example - OS
 
 *Using default decision threshold and number of iterations.*
 
@@ -189,10 +198,19 @@ $MultiPEN FeatureSelection $OutputDirectory $ExpressionData $Interactions $Sampl
 ```
 
 
-### Running example script for feature selection
+#### Running example script for feature selection
 
 To run the script provided as example with all the default parameters, use the command:
 
 ```
 ./example_feature_selection.sh 
 ```
+
+
+References
+
+[1] GenePEN: analysis of network activity alterations in complex diseases via the pairwise elastic net., Vlassis N, Glaab E., Stat Appl Genet Mol Biol. 2015 Apr;14(2):221-4. doi: 10.1515/sagmb-2014-0045.
+
+[2] StringDB
+
+[3] Pathway Commons
