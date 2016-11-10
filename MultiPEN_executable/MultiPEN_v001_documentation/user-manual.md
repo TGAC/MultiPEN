@@ -32,7 +32,7 @@ The tool can analyse gene expression data and/or metabolomics data. The first st
 The following sections describe these modules.
 
 
-# Cross Validation
+## Cross Validation
 
 A common practice in the machine learning community is to first solve for the parameter that optimises the logistic regression problem in Equation 1 for your specific data. In MultiPEN, the module to do precisely that is CrossValidation. 
 
