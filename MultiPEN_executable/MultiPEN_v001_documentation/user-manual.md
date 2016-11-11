@@ -9,9 +9,12 @@ MultiPEN uses a penalised logistic regression approach to find a subset of featu
 
 [Data Analysis](#data-analysis)
 
+- [Hierarchical Clustering](#hierarchical-clustering)
+
 - [Cross Validation](#cross-validation)
 
 - [Feature Selection](#feature-selection)
+
 
 [References](#references)
 
@@ -245,6 +248,10 @@ To run the script provided as example with all the default parameters, use the c
 ./example_feature_selection.sh 
 ```
 
+
+## Hierarchical Clustering
+
+![output hierarchical clustering](images/output-hierarchical-clustering.png)
 
 # References
 
