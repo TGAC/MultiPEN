@@ -40,7 +40,7 @@ switch analysisType
         else
             expData = varargin{1};   %expression data
             interactionMatrix = varargin{2};
-            Y = varargin{3};
+            sampleClass = varargin{3};
             lambdas = str2num(varargin{4});
             folds = str2num(varargin{5});
             if length(varargin) == 5
@@ -59,7 +59,7 @@ switch analysisType
         else
             expData = varargin{1};
             interactionMatrix = varargin{2};
-            Y = varargin{3};
+            sampleClass = varargin{3};
             lambda = str2double(varargin{4});
             switch length(varargin)
                 case 4  % values by default
@@ -117,12 +117,12 @@ if exist('interactionMatrix', 'var')
 end
     
 
-% Y - class per sample
-if exist('Y', 'var')
-    if ~isa(Y,'double')
-        Yfile = Y;
-        Y = load(Yfile, '-ascii');
+% Sample Class
+if exist('sampleClass', 'var')
+    if ~istable(sampleClass)        
+        sampleClass = readtable(sampleClass, 'delimiter', '\t');
     end
+    Y = sampleClass.class;
 end
 
 
