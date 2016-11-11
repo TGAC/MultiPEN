@@ -2,9 +2,12 @@
 
 MultiPEN uses a penalised logistic regression approach to find a subset of features (genes and/or metabolites) that hold more discriminant power to separate two classes: control and cases. This approach uses a molecular interaction network (e.g., protein-protein interaction network or metabolic network) to find the largest connected component that best separates the two conditions (for details on the logistic regression program to be optimised refer to [1]).
 
-[Getting Started](#getting-started)
 
 [The Workflow](#the-workflow)
+
+[Getting Started](#getting-started)
+
+[Data Analysis](#data-analysis)
 
 - [Cross Validation](#cross-validation)
 
@@ -13,17 +16,6 @@ MultiPEN uses a penalised logistic regression approach to find a subset of featu
 [References](#references)
 
 
-# Getting Started
-
-MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime for R2015b in your system. To install MATLAB Runtime: 
-
-1.	Download and save MATLAB Runtime for R2015b for your operating system which can be found from:
-http://www.mathworks.com/products/compiler/mcr/index.html 
-
-2.	Double click the installer and follow the instructions in the installation wizard.
-
-
- 
 # The Workflow
 
 The tool can analyse gene expression data and/or metabolomics data. The first step is to compile a molecular network for which we use StringDB [2][3] and Pathway Commons [4]. 
@@ -36,6 +28,44 @@ The tool can analyse gene expression data and/or metabolomics data. The first st
 The following sections describe these modules.
 
 
+# Getting Started
+
+## MATLAB Runtime
+
+MultiPEN is shared as a MATLAB stand-alone application, which requires the installation of the MATLAB Runtime for R2015b in your system. To install MATLAB Runtime: 
+
+1.	Download and save MATLAB Runtime for R2015b for your operating system which can be found from:
+http://www.mathworks.com/products/compiler/mcr/index.html 
+
+2.	Double click the installer and follow the instructions in the installation wizard.
+
+
+## MultiPEN
+
+Download MultiPEN from: [MultiPEN](https://github.com/wjurkowski/MultiPEN/blob/master/MultiPEN_executable/MultiPEN_v001_OS.zip)
+
+The zip folder contains:
+
+**MultiPEN**
+Application
+
+**ExampleInputs**
+Contains:
+expressionData.txt
+interactionMatrix.txt
+sampleClass.txt
+
+**Scripts to run examples**
+
+*example_cross_validation.sh*
+
+*example_feature_selection.sh*
+
+
+# Data Analysis
+
+After downloading and decompresing the application, open a terminal. In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., binary-OS/MultiPEN_v001_OS/.
+ 
 ## Cross Validation
 
 A common practice in the machine learning community is to first solve for the parameter that optimises the logistic regression problem in Equation 1 for your specific data. In MultiPEN, the module to do precisely that is CrossValidation. 
