@@ -14,9 +14,10 @@ OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Interactions="ExampleInputs/interactionMatrix.txt"
 SampleClass="ExampleInputs/sampleClass.txt"
+Folds=3
 
 # Run MultiPEN: feature selection 
-# with default decision threshold (D) and number of interactions (numIter)
+# with default number of interactions (numIter)
 
-$MultiPEN FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
+$MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda $Folds
 
