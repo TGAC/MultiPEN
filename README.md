@@ -24,8 +24,7 @@ To use the MATLAB code, install the required libraries:
 
 1. Install [TFCOS](http://cvxr.com/tfocs/) 
 2. Install the MATLAB [gaimc package](http://www.mathworks.com/matlabcentral/fileexchange/24134-gaimc) (to determine connected network components).
-
-In this work we use (a slightly modified version of) [GenePEN](http://lcsb-portal.uni.lu/software/index.html) [1].
+3. Download [GenePEN](http://lcsb-portal.uni.lu/software/index.html) [1]. (Note that in this work we use a slightly modified version of GenePEN. More details to be provided soon). 
 
 
 ## Contact
