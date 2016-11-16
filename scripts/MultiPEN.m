@@ -1,19 +1,27 @@
 function MP = MultiPEN(analysisType, saveResults, varargin)
 
-% Function to perform analysis of omics data using MultiPEN and
-% the different type of analysis (specified by parameter 'analysisType')
-% MultiPEN 0.0.1 computes feature selection from transcritpomics and 
-% metabolomics data. 
-% Written by Perla Rey, Agust 2016
-
-% MultiPEN extends the approach proposed by GenePEN (Vlassis N and Glaab E., 
-% Stat. Appl. Genet Mol Biol. 2015, doi: 10.1515/sagmb-2014-0045)
-%
-% It uses following libraries:
-% GenePEN
-% TFOCS-1.3.1
-% gaimc
+% MultiPEN performs analysis of transcritpomics and metabolomics for feature selection
+% Coypyright (C) 2016 {Perla Rey}
 % 
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+% MultiPEN v0.0.1 uses:
+% - GenePEN (Vlassis N and Glaab E., Stat. Appl. Genet Mol Biol. 2015, doi: 10.1515/sagmb-2014-0045)   
+% - TFOCS-1.3.1
+% - gaimc
+% 
+
 
 % INPUTS
 %   analysisType    Options are: 
