@@ -109,7 +109,7 @@ cross-validation_stats.txt | Statistics for tests which include, for each lambda
 
 ### Example - OS
 
-In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., binary-OS/MultiPEN_v001_OS/. Then create variables for the paths to stand-alone application, output directory and input files by typing:
+In the command line, navigate to the folder where the binary for MultiPEN is located, i.e., MultiPEN_v001_OS/. Then create variables for the paths to stand-alone application, output directory and input files by typing:
 
 ```
 MultiPEN="MultiPEN.app/Contents/MacOS/applauncher"
@@ -139,6 +139,13 @@ For example, if we want to try two lambdas, 0.02 and 0.2, we would use the follo
 $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.02 0.2]" $Folds $NumIter
 ```
 
+### Example bash script
+
+We include a bash script to test CrossValidation with the default parameters and a predefined set of lambdas ([0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10]). To run the script, in the command line navigate to the folder where the binary for MultiPEN is located (MultiPEN_v001_OS/) and type:
+
+```
+./example_cross_validation.sh
+```
 
 
 ## Feature Selection
