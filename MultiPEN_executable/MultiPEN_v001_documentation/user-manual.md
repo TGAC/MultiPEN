@@ -169,7 +169,7 @@ Parameter | Description
 
 ### Feature Selection Output Files
 
-Feature selection produces six output files: 
+Feature selection produces seven output files: 
 
 File | Description
 -----|------------
@@ -179,6 +179,8 @@ MultiPEN-Rankings_lambdaX_genes-higher-in-control.txt | Ranking of features whic
 MultiPEN-vts_lambdaX.txt | Intercept term (logistic regression model)
 MultiPEN-performance_feature-selection_lambdaX.txt | LCC, auc, accuracy, TP, TN, FP, FN
 MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision threshold
+MultiPEN-feature-selection_config.txt | Details of the parameters used to run feature selection
+
 
 
 
@@ -214,6 +216,10 @@ Intercept term (logistic regression model)
 
 MultiPEN-performance_feature-selection_lambda0.001.txt | LCC, auc, accuracy, TP, TN, FP, FN
 MultiPEN-feature-selection_config.txt | Lambda, number of iterations, decision threshold
+
+
+** MultiPEN-feature-selection_config.txt **
+File containing details of the parameters used to run feature selection: lambda, number of iterations (numIter - used to run the optimisation routine that solves the logistic regression problem) and the decision threshold (for class prediction). 
 
 
 
