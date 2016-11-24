@@ -33,7 +33,7 @@ SampleClass="ExampleInputs/sampleClass.txt"
 Folds=3
 
 # Run MultiPEN: CrossValidation
-# Syntax: SMultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds $NumIterations
+# Syntax: $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds $NumIterations
 # This example executes CrossValidaton with default number of interactions (numIter)
 
 $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds
