@@ -262,50 +262,10 @@ To run the script provided as example with all the default parameters, use the c
 ```
 
 
-
 ## Hierarchical Clustering
 
-This module is a wrapper for the clustergram function provided by MATLAB, which computes hierarchical clustering from expression data, using Euclidean distance and an average linkage to generate the hierarchical tree. Hierarchical clustering displays the dendrogram and heatmap for the expression data. For more information [follow this link](https://uk.mathworks.com/help/bioinfo/ref/clustergram.html). 
 
-### Syntax
-
-*MultiPEN*  **HierarchicalClustering** *OutputDirectory ExpressionData Threshold TitlePlot*
-
-
-### Description
-
-
-Parameter | Description
-----------|-------------
-*MultiPEN* | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
-*OutputDirectory* | Specify directory to save the output image. By default the image is saved in the directory: output_MultiPEN/stats/.
-*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in the section for [Cross Validation](#cross-validation).
-*Threshold* | Threshold to filter expression values. For example, for gene expression, it is common practice to discard genes with counts smaller than 100. This is an optional input argument.  
-*TitlePlot* | Specify the title to be displayed in the figure. This is an optional input argument.
-
-
-
-### Hierarchical Clustering Output Files
-
-This module saves the figure as a png file:
-
-File | Description
------|------------
-hierarchical_clustering.png | Figure displaying the dendrogram and heatmap for the hierarchical clustering using the provided expression data. 
-
-
-![example outputs for hierarchical clustering](images/output-hierarchical-clustering.png)
-*Hierarchical clustering for the example expression data*
-
-
-### Example bash script - OS
-
-To run the provided bash script, name_of_bash_script, in the command line navigate to the folder where the binary for MultiPEN is located (MultiPEN_v001_OS/) and type:
-
-```
-./example_hierarchical_clustering.sh
-```
-
+![output hierarchical clustering](images/output-hierarchical-clustering.png)
 
 # References
 

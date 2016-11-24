@@ -9,20 +9,23 @@ function hierarchicalClustering(expression, samples, features, saveFigure, varar
 %   varargin 1  Threshold to filter expression data (exclusive)
 %            2  Title plot
 
-plotTitle = 'Hierarchical Clustering';
-
-if numel(varargin)==1
-    %Title Plot
-    plotTitle = varargin(1); 
-end
-
-if numel(varargin)==2
+if numel(varargin)>=1
     %threshold
-    threshold = varargin{2};
+    threshold = varargin{1};
     ind = min(expression)>threshold;
     expression = expression(:,ind);
-    features = features(ind,:);    
+    features = features(ind,:);
+    
+    if numel(varargin)>1
+        %Title Plot
+        plotTitle = varargin(2); 
+    else
+        plotTitle = 'Hierarchical Clustering'; %default plot title
+    end
+else
+    plotTitle = 'Hierarchical Clustering'; %default plot title
 end
+
 
 % Plot hierarchical clustering
 % Standardising along the rows (features) before hierarchical clustering
@@ -33,9 +36,12 @@ hc = clustergram(expression',...
     'OptimalLeafOrder', true);
 set(hc,'RowLabels',features)
 addTitle(hc, plotTitle)
-plot(hc)
+
 
 if ~strcmp(saveFigure,'false')
+    close all hidden
+    plot(hc)
+    
     if strcmp(saveFigure, 'true')
         outputDir = 'output_MultiPEN/stats/';
     else
@@ -47,13 +53,10 @@ if ~strcmp(saveFigure,'false')
         mkdir(outputDir)
     end
 
-    % Statistics for cross validation
+    % Save figure
     fileName = [outputDir 'hierarchical_clustering.png'];
     saveas(gcf, fileName)
     fprintf('\tFigure save to file: \n\t%s\n', ...
         fileName)
                         
 end
-
-close all
-clear hc %close clustergram

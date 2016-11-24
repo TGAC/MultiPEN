@@ -37,8 +37,23 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 
 %% VERIFY INPUT ARGUMENTS
 switch analysisType
-    case 'hierarchicalClustering'
-        
+    case 'HierarchicalClustering'
+        % Hierarchical clustering needs parameters:
+        % D (expression, samples, features), saveFigure, threshold (opt),
+        % plotTitle (optional)  
+        if (isempty(varargin)) || (length(varargin) > 3)
+            error('The number of arguments is incorrect')
+        else
+            expData = varargin{1};            
+            switch length(varargin)
+                case 2
+                    threshold = str2num(varargin{2});
+                    % plotTitle is optional and it won't be provided to HC function
+                case 3
+                    threshold = str2num(varargin{2});
+                    plotTitle = varargin{3};               
+            end
+        end
         
     case 'CrossValidation'
         % cross validation needs parameters: 
@@ -147,11 +162,19 @@ end
 %% Analysis
 
 switch analysisType
-    case 'hierarchicalClustering'
-        % test
-        samples={'sample1' 'sample2' 'sample3' 'sample4'};
-        features={'f1' 'f2' 'f3' 'f4' 'f5' 'f6' 'f7'};
-        hierarchicalClustering(X(1:4,1:7), samples, features)
+    case 'HierarchicalClustering'
+        %hierarchicalClustering(expression, samples, features, saveFigure, varargin)
+        if ~ (exist('threshold','var') && exist('plotTitle', 'var') )
+            hierarchicalClustering(X, samples, XAnnotation, saveResults)
+        elseif (exist('threshold','var') && exist('plotTitle', 'var') )
+            hierarchicalClustering(X, samples, XAnnotation, saveResults, threshold, plotTitle)
+        elseif exist('threshold', 'var') 
+            hierarchicalClustering(X, samples, XAnnotation, saveResults, threshold)
+        elseif exist('plotTitle', 'var')
+            hierarchicalClustering(X, samples, XAnnotation, saveResults, plotTitle)
+        end
+        
+        MP = 1;   % exit code 1  
     
     case 'CrossValidation'                
         % Get subnetwork for  expressionData from interactionMatrix
