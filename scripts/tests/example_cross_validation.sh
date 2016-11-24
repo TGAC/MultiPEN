@@ -18,12 +18,6 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if [ $# -eq 0 ]
-   then
-      lambdas="[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]"
-   else
-      lambdas=$1
-fi
 
 MultiPEN="MultiPEN.app/Contents/MacOS/applauncher"
 OutputDirectory="ExampleOutputs/"
@@ -36,5 +30,5 @@ Folds=3
 # Syntax: $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds $NumIterations
 # This example executes CrossValidaton with default number of interactions (numIter)
 
-$MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds
+$MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]" $Folds
 
