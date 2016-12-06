@@ -306,6 +306,9 @@ To run the provided bash script, name_of_bash_script, in the command line naviga
 ./example_hierarchical_clustering.sh
 ```
 
+Note that the program will continue running until the figure is closed.
+
+
 
 # References
 

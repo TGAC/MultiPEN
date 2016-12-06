@@ -27,13 +27,12 @@ else
 end
 
 
-% Plot hierarchical clustering
-% Standardising along the rows (features) before hierarchical clustering
-% as expression transposed is p-by-n 
 hc = clustergram(expression',...
     'ColumnLabels',samples,...    
-    'Standardize',2,'Colormap','redbluecmap', ...
+    'Standardize',2, ...
     'OptimalLeafOrder', true);
+
+set(hc,'Colormap',redbluecmap);
 set(hc,'RowLabels',features)
 addTitle(hc, plotTitle)
 
@@ -45,7 +44,7 @@ if ~strcmp(saveFigure,'false')
     if strcmp(saveFigure, 'true')
         outputDir = 'output_MultiPEN/stats/';
     else
-        outputDir = saveResults;
+        outputDir = saveFigure;
     end
 
     %check if output directory exists
