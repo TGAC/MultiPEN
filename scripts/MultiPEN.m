@@ -100,11 +100,11 @@ switch analysisType
         
     case 'enrichmentGO'
         % enrichmentGO needs parameters:
-        % fileName (output from FeatureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
+        % mpRankings (output from FeatureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
         if ~(length(varargin) == 1)
             error('The number of arguments is incorrect')
         else
-            fileName = varargin{1};
+            mpRankings = varargin{1};
         end
         
     otherwise
@@ -148,6 +148,13 @@ if exist('sampleClass', 'var')
     Y = sampleClass.class;
 end
 
+
+% Ranking of features
+%if exist('mpRankings', 'var')
+%    if ~istable(mpRankings) 
+%        mpRankings = readtable(mpRankings, 'delimiter', '\t');
+%    end
+%end
 
 %% ADD PATH TO LIBRARIES
 if ~isdeployed
@@ -284,24 +291,25 @@ switch analysisType
         
         
     case 'enrichmentGO'
-        
         % output directory 
-        if strcmp(saveResults, 'true')
-            outputDir = 'output_MultiPEN/enrichment-GO/';
-        else
-            outputDir = saveResults;
-        end
+        %if ~strcmp(saveResults, 'false')
+            if strcmp(saveResults, 'true')
+                outputDir = 'output_MultiPEN/enrichment-GO/';
+            else
+                outputDir = saveResults;
+            end
 
-        %check if output directory exists
-        if exist(outputDir, 'dir') ~= 7
-            mkdir(outputDir)
-        end
+            %check if output directory exists
+            if exist(outputDir, 'dir') ~= 7
+                mkdir(outputDir)
+            end
+        %end
         
         % Build string to call the R string enrichmentGO.R  (using Rscript)
         % syntaxis:
         % path_to_Rscript script_to_run file_name output_directory
         callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentGO.R';
-        callToRscript = [callToRscript ' ' fileName ' ' outputDir];
+        callToRscript = [callToRscript ' ' mpRankings ' ' outputDir];
         system(callToRscript)
         
         % Load the table with results
