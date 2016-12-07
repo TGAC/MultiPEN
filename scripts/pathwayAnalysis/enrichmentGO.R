@@ -32,8 +32,8 @@ library(GO.db)
 
 D <- sortByCol(data, 'ranking')
 D <- D[D[,2]!=0,]
-D <- D[,c(1,3)]  # Only interested in the first three columns [name, ranking]
-entrez<-bitr(D$name, fromType="SYMBOL", toType="ENTREZID", annoDb="org.Hs.eg.db",drop = FALSE)
+D <- D[,c(1,3)]  # Only interested in the first three columns [name, weight, ranking]
+entrez<-bitr(D$name, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db", drop = FALSE)
 ranked<-merge(D,entrez,by.x='name',by.y='SYMBOL')
 
 cat(sprintf("Performing over-representation analysis (enrichGO) ...  "))
@@ -41,7 +41,7 @@ cat(sprintf("Results saved to folder: %s\n", outputDir))
 
 #Enrichment for subontology BP (Biological Process)
 subclassOnt <- "BP"
-enrichment_BP <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+enrichment_BP <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
 enrichmentSummary_BP <- summary(enrichment_BP)
 head(summary(enrichment_BP))
 if(nrow(enrichmentSummary_BP)>0){
@@ -54,7 +54,7 @@ results <- enrichmentSummary_BP
 
 #Enrichment for subontology MF (Molecular Function)
 subclassOnt <- "MF"
-enrichment_MF <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+enrichment_MF <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
 enrichmentSummary_MF <- summary(enrichment_MF)
 head(summary(enrichment_MF)) 
 if(nrow(enrichmentSummary_MF)>0){
@@ -68,7 +68,7 @@ if(nrow(enrichmentSummary_MF)>0){
 
 #Enrichment for subclass CC (Cellular Component)
 subclassOnt <- "CC"
-enrichment_CC <- enrichGO(ranked$ENTREZID, organism='human', ont=subclassOnt, readable=TRUE)
+enrichment_CC <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
 enrichmentSummary_CC <- summary(enrichment_CC)
 head(summary(enrichment_CC))
 if(nrow(enrichmentSummary_CC)>0){
