@@ -98,7 +98,7 @@ switch analysisType
             
         end
         
-    case 'enrichmentGO'
+    case 'EnrichmentGO'
         % enrichmentGO needs parameters:
         % mpRankings (output from FeatureSelection: MultiPEN-Rankings_lambda{lambda}.txt)        
         if ~(length(varargin) == 1)
@@ -290,7 +290,7 @@ switch analysisType
         MP = FS;
         
         
-    case 'enrichmentGO'
+    case 'EnrichmentGO'
         % output directory 
         %if ~strcmp(saveResults, 'false')
             if strcmp(saveResults, 'true')
