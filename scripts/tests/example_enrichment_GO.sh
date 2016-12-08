@@ -19,7 +19,7 @@
 
 
 MultiPEN="MultiPEN.app/Contents/MacOS/applauncher"
-OutputDirectory="ExampleOutputs/EnrichmentGO"
+OutputDirectory="ExampleOutputs/EnrichmentGO/"
 GeneRankings="ExampleInputs/MultiPEN-Rankings_lambda0.0001-onlyGenes.txt"
 
 
