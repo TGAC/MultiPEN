@@ -15,6 +15,8 @@ MultiPEN uses a penalised logistic regression approach to find a subset of featu
 
 - [Feature Selection](#feature-selection)
 
+- [Enrichment Analysis](#enrichment-analysis-with-go)
+
 
 [References](#references)
 
@@ -263,6 +265,7 @@ To run the script provided as example with all the default parameters, use the c
 
 
 
+
 ## Hierarchical Clustering
 
 This module is a wrapper for the clustergram function provided by MATLAB, which computes hierarchical clustering from expression data, using Euclidean distance and an average linkage to generate the hierarchical tree. Hierarchical clustering displays the dendrogram and heatmap for the expression data. For more information [follow this link](https://uk.mathworks.com/help/bioinfo/ref/clustergram.html). 
@@ -307,6 +310,77 @@ To run the provided bash script, name_of_bash_script, in the command line naviga
 ```
 
 Note that the program will continue running until the figure is closed.
+
+
+
+
+## Enrichment Analysis with GO
+
+Some description. 
+
+### Dependencies
+
+R packages
+
+- ClusterProfiler
+- BBmisc
+- GO.db
+
+Installing Dependencies
+
+source("https://bioconductor.org/biocLite.R")
+
+biocLite("clusterProfiler")
+
+biocLite("BBmisc")
+
+biocLite("GO.db")
+
+biocLite('org.Hs.eg.db')
+
+Right now only for humans!
+
+
+
+### Syntax
+
+*MultiPEN*  **EnrichmentGO** *OutputDirectory ExpressionData SampleClass*
+
+
+### Description
+
+
+Parameter | Description
+----------|-------------
+*MultiPEN* | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
+*OutputDirectory* | Specify directory for output files.
+*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in Figure c).
+*SampleClass* | For each sample specify if control (0) or case (1). An example of this file is shown in Figure a) where each row contains the class for one sample. 
+
+
+
+### New_module Output Files
+
+This needs adding
+
+File | Description
+-----|------------
+file_name | Here goes description for output file.
+
+
+![example outputs for new_module](images/xxxxxx.png)
+*Enrichment Analysis with GO*
+
+
+
+
+### Example bash script
+
+To run the provided bash script, name_of_bash_script, in the command line navigate to the folder where the binary for MultiPEN is located (MultiPEN_v001_OS/) and type:
+
+```
+./example_enrichment_GO.sh
+```
 
 
 
