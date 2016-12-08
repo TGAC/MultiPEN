@@ -9,6 +9,8 @@ MultiPEN uses a penalised logistic regression approach to find a subset of featu
 
 [Data Analysis](#data-analysis)
 
+- [PCA](#pca)
+
 - [Hierarchical Clustering](#hierarchical-clustering)
 
 - [Cross Validation](#cross-validation)
@@ -263,6 +265,55 @@ To run the script provided as example with all the default parameters, use the c
 ./example_feature_selection.sh 
 ```
 
+
+
+## PCA
+
+This module performs Principal Component Analysis using MATLAB from expression data. 
+
+### Syntax
+
+*MultiPEN*  **PCA** *OutputDirectory ExpressionData Groups Threshold TitlePlot*
+
+
+### Description
+
+
+Parameter | Description
+----------|-------------
+*MultiPEN* | This is the path to the binary executable of MultiPEN, i.e., binary-OS/MultiPEN_v001_OS/.
+*OutputDirectory* | Specify directory to save the output image. By default the image is saved in the directory: output_MultiPEN/stats/.
+*ExpressionData* |  The expression data is in tabular format where the rows are the features (genes and/or metabolites) and the columns are the samples. An example of a file containing expression data is shown in the section for [Cross Validation](#cross-validation).
+*Groups* |  Each sample belongs to one of two groups, case or control. Specified in this table.
+*Threshold* | Threshold to filter expression values. For example, for gene expression, it is common practice to discard genes with counts smaller than 100. This is an optional input argument.  
+*TitlePlot* | Specify the title to be displayed in the figure. This is an optional input argument.
+
+
+
+### Hierarchical Clustering Output Files
+
+This module produces three figures:
+
+File | Description
+-----|------------
+pca_3components.png | The three principal components.
+pca_2components.png | The first two components
+pca_biplot.png | biplot of the PCA components
+
+
+![example outputs for pca](images/output-pca.png)
+*PCA for the example expression data*
+
+
+### Example bash script - OS
+
+To run the provided bash script, name_of_bash_script, in the command line navigate to the folder where the binary for MultiPEN is located (MultiPEN_v001_OS/) and type:
+
+```
+./example_pca.sh
+```
+
+Note that the program will continue running until the figures are closed.
 
 
 
