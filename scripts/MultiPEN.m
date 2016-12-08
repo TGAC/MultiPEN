@@ -37,6 +37,25 @@ function MP = MultiPEN(analysisType, saveResults, varargin)
 
 %% VERIFY INPUT ARGUMENTS
 switch analysisType
+    case 'PCA'
+        % PCA needs parameters:
+        % expData (expression, samples, features), group, threshold (opt),
+        % plotTitle (optional)  
+        if (isempty(varargin)) || (length(varargin) < 2) || (length(varargin) > 4)
+            error('The number of arguments is incorrect')
+        else
+            expData = varargin{1};            
+            groups = varargin{2};
+            switch length(varargin)
+                case 3
+                    threshold = str2num(varargin{3});
+                    % plotTitle is optional and it won't be provided to HC function
+                case 4
+                    threshold = str2num(varargin{3});
+                    plotTitle = varargin{4};
+            end
+        end
+        
     case 'HierarchicalClustering'
         % Hierarchical clustering needs parameters:
         % D (expression, samples, features), saveFigure, threshold (opt),
@@ -126,7 +145,8 @@ if exist('expData', 'var')
     expression = expData;
     XAnnotation = expression.name;  % p-by-1  -  the features
     X = expression;
-    X.name = [];
+    X.name = [];   
+    
     samples = X.Properties.VariableNames';  % n-by-1 
     X = table2array(X)';  % n-by-p
 end
@@ -148,13 +168,14 @@ if exist('sampleClass', 'var')
     Y = sampleClass.class;
 end
 
+% Groups for PCA
+if exist('groups', 'var')
+    if ~iscell(groups) 
+        groups = readtable(groups, 'delimiter', '\t');
+        groups = table2cell(groups)';
+    end
+end
 
-% Ranking of features
-%if exist('mpRankings', 'var')
-%    if ~istable(mpRankings) 
-%        mpRankings = readtable(mpRankings, 'delimiter', '\t');
-%    end
-%end
 
 %% ADD PATH TO LIBRARIES
 if ~isdeployed
@@ -169,6 +190,12 @@ end
 %% Analysis
 
 switch analysisType
+    case 'PCA'
+        % X is the n-by-p data matrix for n samples, p features
+        pcaExpressionData(X, groups, plotTitle, XAnnotation);
+        
+        MP = 1;  % exit code 1
+    
     case 'HierarchicalClustering'
         %hierarchicalClustering(expression, samples, features, saveFigure, varargin)
         if ~ (exist('threshold','var') && exist('plotTitle', 'var') )
