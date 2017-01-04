@@ -19,10 +19,6 @@ x = zscore(scores(:,1));
 y = zscore(scores(:,2));
 z = zscore(scores(:,3));
 
-if ~isdeployed
-    addpath '~/Documents/MATLAB/gscatter3'
-end
-
 figure()
 c = unique(groupLabels);  % c contains the unique zones
 switch numel(c)
