@@ -184,6 +184,7 @@ if ~isdeployed
     addpath('Libraries/gaimc/')
     addpath('Libraries/GenePEN/')
     addpath('Libraries/TFOCS-1.3.1/')
+    addpath('Libraries/gscatter3/')
 end
 
 
