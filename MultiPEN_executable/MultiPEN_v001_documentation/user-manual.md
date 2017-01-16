@@ -301,7 +301,7 @@ pca_2components.png | The first two components
 pca_biplot.png | biplot of the PCA components
 
 
-![example outputs for pca](images/output-pca.png)
+![example outputs for pca](images/output-pca-random-data.png)
 *PCA for the example expression data*
 
 
