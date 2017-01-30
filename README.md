@@ -27,8 +27,9 @@ To use the MATLAB code, install the required libraries:
 3. Download [GenePEN](http://lcsb-portal.uni.lu/software/index.html) [1]. (Note that in this work we use a slightly modified version of GenePEN. More details to be provided soon). 
 
 
-## Contact
-[Integrative Genomics Group - Earlham Institute](http://www.earlham.ac.uk/jurkowski-group)
+## About Us
+This repository is developed by the [Jurkowski Group](http://www.earlham.ac.uk/jurkowski-group) in the Earlham Institute. It is updated and maintained by [Perla Rey](http://www.earlham.ac.uk/perla-troncoso-rey), who can be reached by email on Perla.TroncosoRey@earlham.ac.uk
+
 
 
 ## References
