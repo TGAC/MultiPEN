@@ -18,15 +18,13 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-MultiPEN="./run_MultiPEN.sh"
-#Change the path to the MCR (MATLAB Compiler Runtime) accordingly
-#mcrPath="/usr/local/MATLAB/R2015b"
-mcrPath="/usr/local/MATLAB/MATLAB_Runtime/v90"
-OutputDirectory="ExampleOutputs/tests/"
+#chance mcrpath accordingly (MATLAB runtime compiler)
+mrcpath="/usr/local/MATLAB/R2015b"
+OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 
 
 # Run MultiPEN: HierarchicalClustering
 # Syntax: $MultiPEN HierarchicalClustering $OutputDirectory $ExpressionData $Threshold $PlotTitle
 
-$MultiPEN $mcrPath HierarchicalClustering $OutputDirectory $ExpressionData 0 "Using example expression data"
+./run_MultiPEN.sh $mrcpath HierarchicalClustering $OutputDirectory $ExpressionData 0 "Using example expression data"

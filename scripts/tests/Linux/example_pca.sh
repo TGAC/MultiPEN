@@ -17,16 +17,13 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-MultiPEN="./run_MultiPEN.sh"
-#Change the path to the compiler accordingly
-#mcrPath="/usr/local/MATLAB/R2015b"
-mcrPath="/usr/local/MATLAB/MATLAB_Runtime/v90"
-OutputDirectory="ExampleOutputs/tests/"
+#chance mcrpath accordingly (MATLAB runtime compiler)
+mrcPath="/usr/local/MATLAB/MATLAB_Runtime"
+OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Groups="ExampleInputs/groups.txt"
 
 
 # Run MultiPEN: PCA
-# Syntax: $run_MultiPEN $mcr_path PCA $OutputDirectory $ExpressionData $Groups $Threshold $PlotTitle
-
-$MultiPEN $mcrPath PCA $OutputDirectory $ExpressionData $Groups 0 "example PCA"
+# Syntax: $MultiPEN PCA $OutputDirectory $ExpressionData $Groups $Threshold $PlotTitle
+./run_MultiPEN.sh $mrcPath PCA $OutputDirectory $ExpressionData $Groups 0 "example PCA"

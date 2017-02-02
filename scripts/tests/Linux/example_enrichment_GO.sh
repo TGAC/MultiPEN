@@ -18,7 +18,8 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-MultiPEN="MultiPEN.app/Contents/MacOS/applauncher"
+#chance mcrpath accordingly (MATLAB runtime compiler)
+mrcpath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/EnrichmentGO/"
 GeneRankings="ExampleInputs/MultiPEN-Rankings_lambda0.0001-onlyGenes.txt"
 
@@ -26,4 +27,4 @@ GeneRankings="ExampleInputs/MultiPEN-Rankings_lambda0.0001-onlyGenes.txt"
 # Run MultiPEN: EnrichmentGO
 # Syntax: $MultiPEN EnrichmentGO $OutputDirectory $GeneRankings
 
-$MultiPEN EnrichmentGO $OutputDirectory $GeneRankings
+./run_MultiPEN.sh $mrcpath EnrichmentGO $OutputDirectory $GeneRankings

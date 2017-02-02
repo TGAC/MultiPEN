@@ -2,6 +2,23 @@
 # script to test the deployed MultiPEN application
 # Module: Feature Selection
 
+#The script example_feature_selection.sh is provided to test FeatureSelection function
+#Copyright (C) 2016  Perla Rey
+#
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 if [ $# -eq 0 ]
    then
       lambda=0.0001
@@ -9,11 +26,9 @@ if [ $# -eq 0 ]
       lambda=$1
 fi
 
-MultiPEN="./run_MultiPEN.sh"
-#Change the path to the compiler accordingly
-#mcrPath="/usr/local/MATLAB/R2015b"
-mcrPath="/usr/local/MATLAB/MATLAB_Runtime/v90"
-OutputDirectory="ExampleOutputs/tests/"
+#chance mcrpath accordingly (MATLAB runtime compiler)
+mrcpath="/usr/local/MATLAB/R2015b"
+OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Interactions="ExampleInputs/interactionMatrix.txt"
 SampleClass="ExampleInputs/sampleClass.txt"
@@ -21,5 +36,5 @@ SampleClass="ExampleInputs/sampleClass.txt"
 # Run MultiPEN: feature selection 
 # with default decision threshold (D) and number of interactions (numIter)
 
-$MultiPEN $mcrPath FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
+./run_MultiPEN.sh $mrcpath FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
 

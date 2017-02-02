@@ -19,11 +19,9 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-MultiPEN="./run_MultiPEN.sh"
-#Change the path to the compiler accordingly
-#mcrPath="/usr/local/MATLAB/R2015b"
-mcrPath="/usr/local/MATLAB/MATLAB_Runtime/v90"
-OutputDirectory="ExampleOutputs/tests/"
+#chance mcrpath accordingly (MATLAB runtime compiler)
+mrcpath="/usr/local/MATLAB/R2015b"
+OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Interactions="ExampleInputs/interactionMatrix.txt"
 SampleClass="ExampleInputs/sampleClass.txt"
@@ -33,4 +31,5 @@ Folds=3
 # Syntax: $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds $NumIterations
 # This example executes CrossValidaton with default number of interactions (numIter)
 
-$MultiPEN $mcrPath CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]" $Folds
+./run_MultiPEN.sh $mrcpath CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]" $Folds
+
