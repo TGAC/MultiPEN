@@ -217,7 +217,10 @@ switch analysisType
         % in the expression data
         fprintf('##############\n')
         fprintf('Obtaining subnetwork for the expression data ... \n')        
-        E = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        % edges has the edges for the subnetwork as table
+        % with name of source, name of target, and weight
+        [E, edges] = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        
         
         %CrossValidation for different lambdas
         fprintf('##############\n')
@@ -328,7 +331,7 @@ switch analysisType
             end
 
             %check if output directory exists
-            if exist(outputDir, 'dir') ~= 7
+            if exist(outputDir, 'dir') ~= 7 && ~strcmp(saveResults, 'false')
                 mkdir(outputDir)
             end
         %end
