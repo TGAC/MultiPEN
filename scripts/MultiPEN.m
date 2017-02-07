@@ -220,12 +220,13 @@ switch analysisType
         % edges has the edges for the subnetwork as table
         % with name of source, name of target, and weight
         [E, edges] = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
-        
+        [Xt, XAnnotationT] = genesInSubnetwork(X, XAnnotation, edges);
+        [E, edges] = subnetwork4ExpressionData(edges, XAnnotationT);
         
         %CrossValidation for different lambdas
         fprintf('##############\n')
         fprintf('Performing cross validation... \n')        
-        [~, ~,stats, yTest, yTestPred] = crossValidation(X, E, Y, lambdas, folds, numIter);
+        [~, ~,stats, yTest, yTestPred] = crossValidation(Xt, E, Y, lambdas, folds, numIter);
         
         if ~strcmp(saveResults,'false')
             if strcmp(saveResults, 'true')
@@ -240,12 +241,18 @@ switch analysisType
             end
                         
             % Statistics for cross validation
-            fileName = [outputDir 'cross-validation_stats.txt'];
-            writetable(stats, fileName, 'delimiter', '\t')
+            FileName = [outputDir 'cross-validation_stats.txt'];
+            writetable(stats, FileName, 'delimiter', '\t')
             fprintf('\tStatistics are saved to file: \n\t%s\n', ...
-                fileName)
+                FileName)
             fprintf('Following are the statistics for cross validation\n')
             display(stats)
+            
+            % Write network used for Cross Validation
+            FileName = [outputDir 'edges-for-cross-validation.txt'];
+            writetable(edges, FileName, 'delimiter', '\t')
+            fprintf('\tEdges for cross validation are saved to file: \n\t%s\n', ...
+                FileName)
                         
         end
         
@@ -286,35 +293,35 @@ switch analysisType
             
             %feature's ranking
             %[name weight ranking]
-            fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda)];
-            fprintf('Writing feature selection to file: \n\t%s\n',fileName)
-            writetable(FS, [fileName '.txt'], 'delimiter', '\t');
+            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda)];
+            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
+            writetable(FS, [FileName '.txt'], 'delimiter', '\t');
             
             %intercept learnt from feature selection
-            fileName = [outputDir 'MultiPEN-vts_lambda' num2str(lambda)];            
-            dlmwrite([fileName '.txt'], vt, 'delimiter', '\t');    
+            FileName = [outputDir 'MultiPEN-vts_lambda' num2str(lambda)];            
+            dlmwrite([FileName '.txt'], vt, 'delimiter', '\t');    
             
             %% write separate tables for higherControl an higherCases
-            fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-control.txt'];
-            fprintf('Writing feature selection to file: \n\t%s\n',fileName)
-            writetable(higherControl, fileName, 'delimiter', '\t');
+            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-control.txt'];
+            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
+            writetable(higherControl, FileName, 'delimiter', '\t');
             
-            fileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-cases.txt'];
-            fprintf('Writing feature selection to file: \n\t%s\n',fileName)
-            writetable(higherCases, fileName, 'delimiter', '\t');
+            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-cases.txt'];
+            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
+            writetable(higherCases, FileName, 'delimiter', '\t');
             
             %% write table with statistics for feature selection accuracy
-            fileName = [outputDir 'MultiPEN-performance_feature-selection_lambda' num2str(lambda) '.txt'];
-            fprintf('Writing performance for feature selection to file: \n\t%s\n',fileName)
-            writetable(stats, fileName, 'delimiter', '\t');
+            FileName = [outputDir 'MultiPEN-performance_feature-selection_lambda' num2str(lambda) '.txt'];
+            fprintf('Writing performance for feature selection to file: \n\t%s\n',FileName)
+            writetable(stats, FileName, 'delimiter', '\t');
             
             %% write file with the parameters used to run feature selection
             config = table();
             config.lambda = lambda;
             config.numIter = numIter;
             config.decisionThreshold = decisionThr;
-            fileName = [outputDir 'MultiPEN-feature-selection_config.txt'];
-            writetable(config, fileName, 'delimiter', '\t');
+            FileName = [outputDir 'MultiPEN-feature-selection_config.txt'];
+            writetable(config, FileName, 'delimiter', '\t');
             
         end
                        
