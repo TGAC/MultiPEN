@@ -1,4 +1,4 @@
-function E = subnetwork4ExpressionData(network, XAnnotation)
+function [E, networkT] = subnetwork4ExpressionData(network, XAnnotation)
 % Function to create the subnetwork with only nodes that correspond to the 
 % features for the expression data.
 
@@ -40,6 +40,7 @@ end
 %% Build E 
 % Nodes are represented by the index according to XAnnotation 
 E = [];
+networkT = table();
 for ii = 1: numel(network(:,1))
     currentS = network.source{ii};
     currentT = network.target{ii};
@@ -48,6 +49,7 @@ for ii = 1: numel(network(:,1))
     index2 = find(strcmp(currentT, XAnnotation));
     if ~isempty(index1) && ~isempty(index2)
         E(end+1,:) = [index1 index2 w]; 
+        networkT(end+1,:) = network(ii,:);
     end
 end
 
