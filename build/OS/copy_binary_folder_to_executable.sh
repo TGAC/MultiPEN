@@ -33,10 +33,10 @@ folderName="MultiPEN_v001_OS"
 echo "###  Copy Binary to MultiPEN_Executable  ###"
 
 # Copy folder for current version to MultiPEN_executable
-target="../MultiPEN_executable/"
+target="../../MultiPEN_executable/"
 target=$target$folderName
 
-echo "Copying files from  ./${folderName}/   to  $target/"
+echo "Copying files from  ${folderName}/   to  $target/"
 
 # If folder exists, delete content, then copy updated content
 if [ ! -d "$target" ]
@@ -52,6 +52,6 @@ fi
 cp -Rp ${folderName} ${target}/
 
 # Compress folder for current version
-zipFile="../MultiPEN_executable/MultiPEN_v001_OS.zip"
+zipFile="../../MultiPEN_executable/MultiPEN_v001_OS.zip"
 zip -r -X $zipFile $folderName
 echo "Compressed file in: $zipFile"

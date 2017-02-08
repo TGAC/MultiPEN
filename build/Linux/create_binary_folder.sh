@@ -28,7 +28,7 @@
 #         MultiPEN-Rankings_lambda0.0001.txt
 #         MultiPEN-vts_lambda0.0001.txt 
 
-exampleScripts="../scripts/tests/"  #path to bash scripts to run examples
+exampleScripts="../../scripts/tests/Linux/"  #path to bash scripts to run examples
 origin="mcc_files_Linux/"   # directory containing binary
 
 folderName="MultiPEN_v001_Linux"
