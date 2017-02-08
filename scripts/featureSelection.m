@@ -14,6 +14,7 @@ function [FS, vt, stats] = featureSelection(X, E, Y, featureAnnot, lambda, numIt
 % lambda 
 % outputDir
 % numIter 
+% D     decision threshold, typically 0.5 but for some application could be different
 
 %% Feature Selection with MultiPEN 
 [weights, vt] = runGenePEN(X, E, Y, lambda, numIter);
