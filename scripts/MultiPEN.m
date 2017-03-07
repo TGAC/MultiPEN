@@ -94,25 +94,37 @@ switch analysisType
         
     case 'FeatureSelection'
         % FeatureSelection needs parameters:
-        % D, E, Y, lambda, decisionThr, numIter (optional)
-        if ~((length(varargin) == 4) || (length(varargin) == 5) || ...
-                (length(varargin) == 6))
+        % D, E, Y, lambda, logTransform (optional), normalise (optional), 
+        %      decisionThr (optional), numIter (optional)
+%         if ~((length(varargin) == 4) || (length(varargin) == 5) || ...
+%                 (length(varargin) == 6))
+        if ~((length(varargin) == 4) || (length(varargin) == 5))
             error('The number of arguments is incorrect')
         else
             expData = varargin{1};
             interactionMatrix = varargin{2};
             sampleClass = varargin{3};
             lambda = str2double(varargin{4});
+            
             switch length(varargin)
                 case 4  % values by default
+                    logTransform = 0;
+                    normalise = 0;
                     decisionThr = 0.50;  %by default decision threshold
                     numIter = 100;    %by default number of iterations
                 case 5
-                    decisionThr = str2double(varargin{5});
-                    numIter = 100;
-                case 6
-                    decisionThr = str2double(varargin{5});
-                    numIter = str2num(varargin{6});
+                    % optional string, example: 010.500100
+                    % Position      Parameter       Values
+                    %   1         logTransform      0 or 1
+                    %   2           normalise       0 or 1
+                    %  3:6         decisionThr     1.00, 0.60, etc
+                    %  7:10          numIter       0300, 1000, 2000, etc
+                    optional = varargin{5};
+                    logTransform = str2num(optional(1));
+                    normalise = str2num(optional(2));
+                    decisionThr = str2double(optional(3:6));
+                    numIter = str2double(optional(7:10));
+
             end
             
         end
@@ -265,20 +277,39 @@ switch analysisType
         % in the expression data
         fprintf('##############\n')
         fprintf('Obtaining subnetwork for the expression data ... \n')        
-        E = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        [~, edges] = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
+        [Xt, XAnnotationT] = genesInSubnetwork(X, XAnnotation, edges);
+        [E, edges] = subnetwork4ExpressionData(edges, XAnnotationT);
         
-        %Feature selection for a specific lambda
+        % Remove duplicated edges
+        E = removeDuplicatedEdges(E);
+        
+        %% Feature selection for a specific lambda
         fprintf('Performing feature selection... \n')
-        %FS is a table with columns: [name, weight, ranking]
-        [FS, vt, stats] = featureSelection(X, E, Y, XAnnotation, lambda, numIter, decisionThr);
+        % Data pre-processing
+        if logTransform && normalise
+            %FS is a table with columns: [name, weight, ranking]
+            [FS, vt, stats] = featureSelection(zscore(log2(Xt)), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+        elseif logTransform && ~normalise
+            %FS is a table with columns: [name, weight, ranking]
+            [FS, vt, stats] = featureSelection(log2(Xt), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+        elseif ~logTransform && normalise
+            %FS is a table with columns: [name, weight, ranking]
+            [FS, vt, stats] = featureSelection(zscore(Xt), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+        elseif ~logTransform && ~normalise
+            %FS is a table with columns: [name, weight, ranking]
+            %[FS, vt, stats] = featureSelection(X, E, Y, XAnnotation, lambda, numIter, decisionThr);            
+            [FS, vt, stats] = featureSelection(Xt, E, Y, XAnnotationT, lambda, numIter, decisionThr);
+        end
         
         %compute fold change
-        [FS, higherControl, higherCases] = foldChange(FS, X, Y, samples);
+        %[FS, higherControl, higherCases] = foldChange(FS, X, Y, samples);
+        [FS, higherControl, higherCases] = foldChange(FS, Xt, Y, samples);
         
         %sort results by ranking
         FS = sortrows(FS,{'ranking'},{'ascend'});
         
-        % WRITE feature selection (FS table) to file
+        %% WRITE feature selection (FS table) to file
         if ~strcmp(saveResults,'false')
             if strcmp(saveResults, 'true')
                 outputDir = 'output_MultiPEN/feature_selection/';
@@ -286,43 +317,9 @@ switch analysisType
                 outputDir = saveResults;
             end
             
-            %check if output directory exists
-            if exist(outputDir, 'dir') ~= 7
-                mkdir(outputDir)
-            end
-            
-            %feature's ranking
-            %[name weight ranking]
-            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda)];
-            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
-            writetable(FS, [FileName '.txt'], 'delimiter', '\t');
-            
-            %intercept learnt from feature selection
-            FileName = [outputDir 'MultiPEN-vts_lambda' num2str(lambda)];            
-            dlmwrite([FileName '.txt'], vt, 'delimiter', '\t');    
-            
-            %% write separate tables for higherControl an higherCases
-            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-control.txt'];
-            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
-            writetable(higherControl, FileName, 'delimiter', '\t');
-            
-            FileName = [outputDir 'MultiPEN-Rankings_lambda' num2str(lambda) '_higher-in-cases.txt'];
-            fprintf('Writing feature selection to file: \n\t%s\n',FileName)
-            writetable(higherCases, FileName, 'delimiter', '\t');
-            
-            %% write table with statistics for feature selection accuracy
-            FileName = [outputDir 'MultiPEN-performance_feature-selection_lambda' num2str(lambda) '.txt'];
-            fprintf('Writing performance for feature selection to file: \n\t%s\n',FileName)
-            writetable(stats, FileName, 'delimiter', '\t');
-            
-            %% write file with the parameters used to run feature selection
-            config = table();
-            config.lambda = lambda;
-            config.numIter = numIter;
-            config.decisionThreshold = decisionThr;
-            FileName = [outputDir 'MultiPEN-feature-selection_config.txt'];
-            writetable(config, FileName, 'delimiter', '\t');
-            
+            saveFeatureSelection(outputDir, FS, vt, higherControl, higherCases, ...
+                stats, edges, lambda, decisionThr, numIter, logTransform, normalise, optional);
+
         end
                        
         MP = FS;
