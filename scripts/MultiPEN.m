@@ -321,7 +321,7 @@ switch analysisType
             end
             
             saveFeatureSelection(outputDir, FS, vt, higherControl, higherCases, ...
-                stats, edges, lambda, decisionThr, numIter, logTransform, normalise, optional);
+                stats, edges, lambda, decisionThr, numIter, optional);
 
         end
                        
