@@ -29,6 +29,9 @@ R = tiedrank(abs(weights));
 % and the minimum absoulute weight has the larges ranking
 n = numel(R);
 FS.ranking = n - (R - 1);
+% leave zeros in features with weights = 0
+FS.ranking(FS.weight == 0) = 0;
+
 
 %% Evaluate prediction
 stats = evaluatePrediction(X, Y, E, weights, D);
