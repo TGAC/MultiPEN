@@ -29,7 +29,7 @@ R = tiedrank(abs(weights));
 % and the minimum absoulute weight has the larges ranking
 n = numel(R);
 FS.ranking = n - (R - 1);
-% leave zeros in features with weights = 0
+% For features with weight = 0, set "ranking" = 0  (i.e., no selected)
 FS.ranking(FS.weight == 0) = 0;
 
 
