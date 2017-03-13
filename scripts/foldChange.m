@@ -48,5 +48,5 @@ higherCases.Properties.VariableNames(5:end) = sampleAnnot;
 %% Add a column to feature selection 
 FS.foldChange = fchange;
 FS.higherIn = higherIn;
-FS(:,end+1:end+(numel(X(:,1)))) = array2table(X');
-FS.Properties.VariableNames(6:end) = sampleAnnot;
+% FS(:,end+1:end+(numel(X(:,1)))) = array2table(X');
+% FS.Properties.VariableNames(6:end) = sampleAnnot;
