@@ -288,26 +288,29 @@ switch analysisType
         fprintf('Performing feature selection... \n')
         % Data pre-processing
         if logTransform && normalise
-            %FS is a table with columns: [name, weight, ranking]
-            [FS, vt, stats] = featureSelection(zscore(log2(Xt)), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+            XtFS = zscore(log2(Xt));
         elseif logTransform && ~normalise
-            %FS is a table with columns: [name, weight, ranking]
-            [FS, vt, stats] = featureSelection(log2(Xt), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+            XtFS = log2(Xt);
         elseif ~logTransform && normalise
-            %FS is a table with columns: [name, weight, ranking]
-            [FS, vt, stats] = featureSelection(zscore(Xt), E, Y, XAnnotationT, lambda, numIter, decisionThr);
+            XtFS = zscore(Xt);
         elseif ~logTransform && ~normalise
-            %FS is a table with columns: [name, weight, ranking]
-            %[FS, vt, stats] = featureSelection(X, E, Y, XAnnotation, lambda, numIter, decisionThr);            
-            [FS, vt, stats] = featureSelection(Xt, E, Y, XAnnotationT, lambda, numIter, decisionThr);
+            XtFS = Xt;
         end
+        %FS is a table with columns: [name, weight, ranking]
+        [FS, vt, stats] = featureSelection(XtFS, E, Y, XAnnotationT, lambda, numIter, decisionThr);
         
         %compute fold change
-        %[FS, higherControl, higherCases] = foldChange(FS, X, Y, samples);
         [FS, higherControl, higherCases] = foldChange(FS, Xt, Y, samples);
+        
+        % add the expression data used for Feature Selection
+        FS(:,end+1:end+(numel(XtFS(:,1)))) = array2table(XtFS');
+        FS.Properties.VariableNames(6:end) = samples;
         
         %sort results by ranking
         FS = sortrows(FS,{'ranking'},{'ascend'});
+        
+        % how many features were selected
+        fprintf('Number of features selected: %i\n', numel(FS.weight(FS.weight ~= 0)))
         
         %% WRITE feature selection (FS table) to file
         if ~strcmp(saveResults,'false')
