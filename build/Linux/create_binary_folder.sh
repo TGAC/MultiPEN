@@ -1,16 +1,26 @@
 #!/bin/sh
 # Script to create folder for current version of MultiPEN
-# It copies files for current binary, examples (input and output files) and 
-# scripts to test the examples (original files) into a new folder for current version of MultiPEN (MultiPEN_current-version_Linux)
+# It copies the following files:
+# - MATLAB files for current binary
+# - R scripts for pathway analysis
+# - Example files (inputs and outputs) and
+# - Scripts to test MultiPEN with example files
+# To a new folder for MultiPEN's current version (i.e., MultiPEN_current-version_Linux)
 
 # Original files are located in:
 #   Binary: "MultiPEN/MultiPEN_executable_development/mcc_files_Linux/"
+#   R scripts for pathway analysis: "MultiPEN/scripts/pathwayAnalysis/"
 #   Example Input Files: "MultiPEN/MultiPEN_executable_development/ExampleInputs/"
+#   Example Output Files: "MultiPEN/MultiPEN_executable_development/ExampleOutputs/"
 #   Bash scripts to run examples: "MultiPEN/scripts/tests/"
+
 
 # Currrent Version: MultiPEN_v001_Linux
 # Content:
 #   MultiPEN (the application)
+#   pathwayAnalysis/
+#      enrichmentGO_sortedList.R
+#      enrichmentGO.R
 #   example_cross_validation.sh
 #   example_feature_selection.sh   
 #   ExampleInputs
@@ -28,8 +38,10 @@
 #         MultiPEN-Rankings_lambda0.0001.txt
 #         MultiPEN-vts_lambda0.0001.txt 
 
-exampleScripts="../../scripts/tests/Linux/"  #path to bash scripts to run examples
 origin="mcc_files_Linux/"   # directory containing binary
+rscripts="../../scripts/pathwayAnalysis/"  # directory containing all R scripts for pathway analysis
+exampleScripts="../../scripts/tests/Linux/"  #path to bash scripts to run examples
+
 
 folderName="MultiPEN_v001_Linux"
 
@@ -49,6 +61,12 @@ cp ${origin}MultiPEN ${folderName}
 cp ${origin}run_MultiPEN.sh ${folderName}
 chmod 755 ${folderName}MultiPEN
 chmode 755 ${folderName}run_MultiPEN.sh
+
+# Create pathwayAnalysis folder 
+mkdir ${folderName}/pathwayAnalysis
+# Copy all R scripts for pathway analysis
+cp -Rp ${rscripts}*.R ${folderName}/pathwayAnalysis/  # copies all R scripts
+
 
 # Copy all example files and scripts to run examples
 cp -Rp ExampleInputs/ ${folderName}/ExampleInputs/

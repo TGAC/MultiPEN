@@ -1,15 +1,27 @@
 #!/bin/sh
-# Script to copy folder for current version to MultiPEN_executable
-# It copies files for current binary, examples (input and output files) and 
-# scripts to test the examples (original files) into a new folder for current version of MultiPEN (MultiPEN_current-version_OS)
+# Script to copy MultiPEN's current version to MultiPEN_executable
+# It copies the following files:
+#   - MATLAB binary
+#   - R scripts for pathway analysis
+#   - Example files (input and output files) and
+#   - Scripts to test MultiPEN with example files
 
-# Original files are located in:
-#   "MultiPEN/build/MultiPEN_current-version_OS/"
+
+# Source directory:
+#   "MultiPEN/build/operating_system/MultiPEN_current-version_operating-system/"
+
+
+# Target directory:
+#   "MultiPEN/MultiPEN_executable/MultiPEN_current-version_operating-system/"
+
 
 
 # Currrent Version: MultiPEN_v001_OS
 # Content:
 #   MultiPEN (the application)
+#   pathwayAnalysis/
+#      enrichmentGO_sortedList.R
+#      enrichmentGO.R
 #   example_cross_validation.sh
 #   example_feature_selection.sh   
 #   ExampleInputs
