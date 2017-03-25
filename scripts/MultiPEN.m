@@ -353,12 +353,16 @@ switch analysisType
         % Build string to call the R string enrichmentGO.R  (using Rscript)
         % syntaxis:
         % path_to_Rscript script_to_run file_name output_directory
-        callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentGO.R';
+        if ~isdeployed
+            callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentGO.R';
+        else
+            callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript pathwayAnalysis/enrichmentGO.R';
+        end
         callToRscript = [callToRscript ' ' mpRankings ' ' outputDir];
         system(callToRscript)
         
         % Load the table with results
         MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
-        
+        % MP = 1;
 
 end
