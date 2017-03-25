@@ -49,8 +49,8 @@ cat(sprintf("Results saved to folder: %s\n", outputDir))
 #Enrichment for subontology BP (Biological Process)
 subclassOnt <- "BP"
 enrichment_BP <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_BP <- as.data.frame(enrichment_BP)
-head(as.data.frame(enrichment_BP))
+enrichmentSummary_BP <- summary(enrichment_BP)
+head(enrichmentSummary_BP)
 if(nrow(enrichmentSummary_BP)>0){
   aux <- cbind(enrichmentSummary_BP, "BP")
   colnames(aux)[10]<- 'subontology'
@@ -62,8 +62,8 @@ results <- enrichmentSummary_BP
 #Enrichment for subontology MF (Molecular Function)
 subclassOnt <- "MF"
 enrichment_MF <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_MF <- as.data.frame(enrichment_MF)
-head(as.data.frame(enrichment_MF)) 
+enrichmentSummary_MF <- summary(enrichment_MF)
+head(enrichmentSummary_MF)
 if(nrow(enrichmentSummary_MF)>0){
   aux <- cbind(enrichmentSummary_MF, "MF")
   colnames(aux)[10]<- 'subontology'
@@ -76,8 +76,8 @@ if(nrow(enrichmentSummary_MF)>0){
 #Enrichment for subclass CC (Cellular Component)
 subclassOnt <- "CC"
 enrichment_CC <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_CC <- as.data.frame(enrichment_CC)
-head(as.data.frame(enrichment_CC))
+enrichmentSummary_CC <- summary(enrichment_CC)
+head(enrichmentSummary_CC)
 if(nrow(enrichmentSummary_CC)>0){
   aux <- cbind(enrichmentSummary_CC, "CC")
   colnames(aux)[10]<- 'subontology'
