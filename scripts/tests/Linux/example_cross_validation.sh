@@ -29,7 +29,11 @@ Folds=3
 
 # Run MultiPEN: CrossValidation
 # Syntax: $MultiPEN CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass $lambdas $Folds $NumIterations
-# This example executes CrossValidaton with default number of interactions (numIter)
 
-./run_MultiPEN.sh $mrcpath CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]" $Folds
+# The following line tests cross validation with the default number of interactions (numIter) and
+# the default set of twenty lambdas in the range [10^-12, 100]
+./run_MultiPEN.sh $mrcpath CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "-1" $Folds
+
+# To test cross validation with a specific set of lambdas, uncomment the following line and change the set of lambdas accordingly
+# ./run_MultiPEN.sh $mrcpath CrossValidation $OutputDirectory $ExpressionData $Interactions $SampleClass "[0.0000001 0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10]" $Folds
 
