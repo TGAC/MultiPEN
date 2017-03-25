@@ -96,8 +96,6 @@ switch analysisType
         % FeatureSelection needs parameters:
         % D, E, Y, lambda, logTransform (optional), normalise (optional), 
         %      decisionThr (optional), numIter (optional)
-%         if ~((length(varargin) == 4) || (length(varargin) == 5) || ...
-%                 (length(varargin) == 6))
         if ~((length(varargin) == 4) || (length(varargin) == 5))
             error('The number of arguments is incorrect')
         else
@@ -113,12 +111,14 @@ switch analysisType
                     decisionThr = 0.50;  %by default decision threshold
                     numIter = 100;    %by default number of iterations
                 case 5
-                    % optional string, example: 010.500100
-                    % Position      Parameter       Values
-                    %   1         logTransform      0 or 1
-                    %   2           normalise       0 or 1
-                    %  3:6         decisionThr     1.00, 0.60, etc
-                    %  7:10          numIter       0300, 1000, 2000, etc
+                    % optional is a string, for example: 010.500100
+                    % where digits of groups of digit represent the
+                    % following parameter:
+                    % (digit's) Position      Parameter       Values
+                    %         1             logTransform      0 or 1
+                    %         2               normalise       0 or 1
+                    %        3:6             decisionThr     1.00, 0.60, etc
+                    %        7:10              numIter       0300, 1000, 2000, etc
                     optional = varargin{5};
                     logTransform = str2num(optional(1));
                     normalise = str2num(optional(2));
@@ -228,7 +228,14 @@ switch analysisType
         % i.e. use only interactions whose nodes correspond to features
         % in the expression data
         fprintf('##############\n')
-        fprintf('Obtaining subnetwork for the expression data ... \n')        
+        fprintf('Obtaining subnetwork for the expression data ... \n')    
+        
+        % Default set of 20 lambdas
+        % If none were provided, i.e., lambdas=-1
+        if lambdas == -1
+            lambdas = logspace(-12,2,20);
+        end
+        
         % edges has the edges for the subnetwork as table
         % with name of source, name of target, and weight
         [E, edges] = subnetwork4ExpressionData(interactionMatrix, XAnnotation);
