@@ -106,6 +106,7 @@ switch analysisType
             
             switch length(varargin)
                 case 4  % values by default
+                    optional = '000.500100';
                     logTransform = 0;
                     normalise = 0;
                     decisionThr = 0.50;  %by default decision threshold
@@ -205,7 +206,7 @@ end
 switch analysisType
     case 'PCA'
         % X is the n-by-p data matrix for n samples, p features
-        pcaExpressionData(X, groups, plotTitle, XAnnotation);
+        pcaExpressionData(X, groups, plotTitle, XAnnotation, saveResults);
         
         MP = 1;  % exit code 1
     
