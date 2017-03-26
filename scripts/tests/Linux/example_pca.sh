@@ -18,7 +18,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #chance mcrpath accordingly (MATLAB runtime compiler)
-mrcPath="/usr/local/MATLAB/MATLAB_Runtime"
+mrcPath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Groups="ExampleInputs/groups.txt"
