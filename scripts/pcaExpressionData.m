@@ -1,4 +1,4 @@
-function pcaExpressionData(X, groupLabels, titleGraph, annot)
+function pcaExpressionData(X, groupLabels, titleGraph, annot, outputDir)
 % Performs PCA
 % Plots first three and two principal components
 %
@@ -34,6 +34,17 @@ ylabel(['PC-2(' num2str(round(pcvars(2)/sum(pcvars)*100)) '% variance)'])
 zlabel(['PC-3(' num2str(round(pcvars(3)/sum(pcvars)*100)) '% variance)'])
 
 
+%check if output directory exists
+if exist(outputDir, 'dir') ~= 7
+    mkdir(outputDir)
+end
+
+% Save figure
+fileName = [outputDir 'pca_three_components.png'];
+saveas(gcf, fileName)
+fprintf('\tFigure save to file: \n\t%s\n', ...
+    fileName)
+
 %% 
 % Plot first two components
 
@@ -50,6 +61,11 @@ xlabel(['PC-1(' num2str(round(pcvars(1)/sum(pcvars)*100)) '% variance)'])
 ylabel(['PC-2(' num2str(round(pcvars(2)/sum(pcvars)*100)) '% variance)'])
 title(titleGraph)
 
+% Save figure
+fileName = [outputDir 'pca_two_components.png'];
+saveas(gcf, fileName)
+fprintf('\tFigure save to file: \n\t%s\n', ...
+    fileName)
 
 %% 
 %if annotation for each feature (gene/metabolite) is provided
@@ -59,4 +75,11 @@ if nargin > 3
     figure
     biplot(coeff(:,1:3),'scores',scores(:,1:3),'varlabels',annot);
     title(titleGraph)
+    
+    
+    % Save figure
+    fileName = [outputDir 'pca_biplot.png'];
+    saveas(gcf, fileName)
+    fprintf('\tFigure save to file: \n\t%s\n', ...
+        fileName)
 end
