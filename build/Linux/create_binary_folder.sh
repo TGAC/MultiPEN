@@ -59,8 +59,8 @@ echo "Copying files from  ${origin}   to    ${folderName}/"
 # Copy MultiPEN application
 cp ${origin}MultiPEN ${folderName}
 cp ${origin}run_MultiPEN.sh ${folderName}
-chmod 755 ${folderName}MultiPEN
-chmode 755 ${folderName}run_MultiPEN.sh
+chmod 755 ${folderName}/MultiPEN
+chmod 755 ${folderName}/run_MultiPEN.sh
 
 # Create pathwayAnalysis folder 
 mkdir ${folderName}/pathwayAnalysis
@@ -72,3 +72,4 @@ cp -Rp ${rscripts}*.R ${folderName}/pathwayAnalysis/  # copies all R scripts
 cp -Rp ExampleInputs/ ${folderName}/ExampleInputs/
 cp -Rp ExampleOutputs/ ${folderName}/ExampleOutputs/
 cp -p ${exampleScripts}example_*.sh ${folderName}/  #copies all bash scripts to run examples
+chmod 755 ${folderName}/example_*.sh
