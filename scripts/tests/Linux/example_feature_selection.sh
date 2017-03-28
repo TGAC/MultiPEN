@@ -26,8 +26,8 @@ if [ $# -eq 0 ]
       lambda=$1
 fi
 
-#chance mcrpath accordingly (MATLAB runtime compiler)
-mrcpath="/usr/local/MATLAB/R2015b"
+# mcrpath is the location of the MATLAB Compiler Runtime, modify next line accordingly
+mcrpath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Interactions="ExampleInputs/interactionMatrix.txt"
@@ -36,5 +36,5 @@ SampleClass="ExampleInputs/sampleClass.txt"
 # Run MultiPEN: feature selection 
 # with default decision threshold (D) and number of interactions (numIter)
 
-./run_MultiPEN.sh $mrcpath FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
+./run_MultiPEN.sh $mcrpath FeatureSelection $OutputDirectory $ExpressionData $Interactions $SampleClass $lambda
 

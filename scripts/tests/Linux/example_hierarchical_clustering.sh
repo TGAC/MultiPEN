@@ -18,8 +18,8 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#chance mcrpath accordingly (MATLAB runtime compiler)
-mrcpath="/usr/local/MATLAB/R2015b"
+# mcrpath is the location of the MATLAB Compiler Runtime, modify next line accordingly
+mcrpath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 
@@ -27,4 +27,4 @@ ExpressionData="ExampleInputs/expressionData.txt"
 # Run MultiPEN: HierarchicalClustering
 # Syntax: $MultiPEN HierarchicalClustering $OutputDirectory $ExpressionData $Threshold $PlotTitle
 
-./run_MultiPEN.sh $mrcpath HierarchicalClustering $OutputDirectory $ExpressionData 0 "Using example expression data"
+./run_MultiPEN.sh $mcrpath HierarchicalClustering $OutputDirectory $ExpressionData 0 "Using example expression data"

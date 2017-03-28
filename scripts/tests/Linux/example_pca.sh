@@ -17,8 +17,8 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#chance mcrpath accordingly (MATLAB runtime compiler)
-mrcPath="/usr/local/MATLAB/R2015b"
+# mcrpath is the location of the MATLAB Compiler Runtime, modify next line accordingly
+mcrpath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/"
 ExpressionData="ExampleInputs/expressionData.txt"
 Groups="ExampleInputs/groups.txt"
@@ -26,4 +26,4 @@ Groups="ExampleInputs/groups.txt"
 
 # Run MultiPEN: PCA
 # Syntax: $MultiPEN PCA $OutputDirectory $ExpressionData $Groups $Threshold $PlotTitle
-./run_MultiPEN.sh $mrcPath PCA $OutputDirectory $ExpressionData $Groups 0 "example PCA"
+./run_MultiPEN.sh $mcrpath PCA $OutputDirectory $ExpressionData $Groups 0 "example PCA"

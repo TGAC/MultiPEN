@@ -18,8 +18,8 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#chance mcrpath accordingly (MATLAB runtime compiler)
-mrcpath="/usr/local/MATLAB/R2015b"
+# mcrpath is the location of the MATLAB Compiler Runtime, modify next line accordingly
+mcrpath="/usr/local/MATLAB/R2015b"
 OutputDirectory="ExampleOutputs/EnrichmentGO/"
 GeneRankings="ExampleInputs/MultiPEN-Rankings_lambda0.0001-onlyGenes.txt"
 
@@ -27,4 +27,4 @@ GeneRankings="ExampleInputs/MultiPEN-Rankings_lambda0.0001-onlyGenes.txt"
 # Run MultiPEN: EnrichmentGO
 # Syntax: $MultiPEN EnrichmentGO $OutputDirectory $GeneRankings
 
-./run_MultiPEN.sh $mrcpath EnrichmentGO $OutputDirectory $GeneRankings
+./run_MultiPEN.sh $mcrpath EnrichmentGO $OutputDirectory $GeneRankings
