@@ -49,7 +49,7 @@ switch analysisType
             switch length(varargin)
                 case 3
                     threshold = str2num(varargin{3});
-                    % plotTitle is optional and it won't be provided to HC function
+                    % plotTitle is optional and it won't be provided to pcaExpression function
                 case 4
                     threshold = str2num(varargin{3});
                     plotTitle = varargin{4};
@@ -357,13 +357,17 @@ switch analysisType
         if ~isdeployed
             callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentGO.R';
         else
-            callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript pathwayAnalysis/enrichmentGO.R';
+            callToRscript = 'Rscript pathwayAnalysis/enrichmentGO.R';
         end
-        callToRscript = [callToRscript ' ' mpRankings ' ' outputDir];
-        system(callToRscript)
         
-        % Load the table with results
-        MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
-        % MP = 1;
+        try
+            callToRscript = [callToRscript ' ' mpRankings ' ' outputDir];
+            system(callToRscript)
+        
+            % Load the table with results
+            MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
+        catch
+            error('I could not execute the R script enrichmentGO')
+        end
 
 end
