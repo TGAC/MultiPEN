@@ -93,8 +93,8 @@ fileName <- paste(outputDir, "gse-KEGG.txt", sep = "")
 cat(sprintf("writing results to file: %s\n", fileName))
 write.table(results, fileName, sep = '\t', row.names = FALSE)
 
-# save plot to file:
-fileName <- paste(outputDir, 'gse-KEGG.pdf', sep = "")
-pdf(fileName)
-library("DOSE")
-barplot(results$setSize, horiz = T, legend.text = T)
+# save plot to file (currently not supported!):
+# fileName <- paste(outputDir, 'gse-KEGG.pdf', sep = "")
+# pdf(fileName)
+# barplot(kk2)
+# barplot(results$setSize, horiz = T, legend.text = T)
