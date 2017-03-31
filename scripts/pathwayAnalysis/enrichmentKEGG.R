@@ -43,15 +43,17 @@ library(GO.db)
 
 D <- sortByCol(data, 'ranking')
 D <- D[D[,2]!=0,]
-D <- D[,c(1,3)]  # Only interested in the first three columns [name, weight, ranking]
+D <- D[,c(1,2,3)]  # Only interested in the first three columns [name, weight, ranking]
 entrez<-bitr(D$name, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db", drop = FALSE)
 ranked<-merge(D,entrez,by.x='name',by.y='SYMBOL')
+ranked <- sortByCol(ranked, 'weight', asc = F)
+geneList <- ranked$weight
+names(geneList) <- ranked$ENTREZID
 
 cat(sprintf("Performing over-representation analysis (with KEGG) ...  "))
 cat(sprintf("Results saved to folder: %s\n", outputDir))
 
-#Enrichment for subontology BP (Biological Process)
-subclassOnt <- "BP"
+#Enrichment with KEGG
 enrichment_kegg <- enrichKEGG(ranked$ENTREZID, organism = 'hsa', keyType = "kegg")
 results <- summary(enrichment_kegg)
 head(results)
@@ -72,3 +74,27 @@ write.table(results, fileName, sep = '\t', row.names = FALSE)
 fileName <- paste(outputDir, 'enrichment-KEGG.pdf', sep = "")
 pdf(fileName)
 barplot(enrichment_kegg, showCategory=20)
+
+
+## Gene Set Enrichment with KEGG
+kk2 <- gseKEGG(geneList, organism = 'hsa', keyType = "kegg")
+results <- summary(kk2)
+results
+
+
+# modify column names for consistency for valid MATLAB identifiers
+# change: p.adjust to pAdjust
+aux <- colnames(results)
+aux[c(6,7,8)] <- c("pValue", "pAdjust", "qValue")
+colnames(results) <- aux
+
+#write results (table) to file: 
+fileName <- paste(outputDir, "gse-KEGG.txt", sep = "")
+cat(sprintf("writing results to file: %s\n", fileName))
+write.table(results, fileName, sep = '\t', row.names = FALSE)
+
+# save plot to file:
+fileName <- paste(outputDir, 'gse-KEGG.pdf', sep = "")
+pdf(fileName)
+library("DOSE")
+barplot(results$setSize, horiz = T, legend.text = T)
