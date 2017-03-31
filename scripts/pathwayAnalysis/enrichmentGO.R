@@ -4,10 +4,14 @@
 # GO.db
 # org.Hs.eg.db
 
+# Check if packages are installed, otherwise, install them
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load("BBmisc", "GO.db", "org.Hs.eg.db", "clusterProfiler")
+
 # TEST:
 # file with example data: 'ExampleOutputs/MultiPEN-Rankings_lambda0.1.txt'
 # Run in terminal:
-#  Rscript enrichmentGO.R '/Users/troncosp/Documents/Projects/MultiPEN/MultiPEN_executable/MultiPEN_v001_OS/ExampleOutputs/MultiPEN-Rankings_lambda0.0001.txt' output-folder/
+# Rscript enrichmentGO.R '/path-to-file/MultiPEN-Rankings_lambda0.0001.txt' output-folder/
 
 args = commandArgs(trailingOnly=TRUE)
 
