@@ -139,6 +139,15 @@ switch analysisType
             mpRankings = varargin{1};
         end
         
+    case 'EnrichmentKEGG'
+        % enrichmentKEGG needs parameters:
+        % mpRankings (output from FeatureSelection: MultiPEN-Rankings_lambda{lambda}.txt)
+        if ~(length(varargin) == 1)
+            error('The number of arguments is incorrect')
+        else
+            mpRankings = varargin{1};
+        end
+        
     otherwise
         error('Please specify a valid analysis')
 end
@@ -366,6 +375,38 @@ switch analysisType
         
             % Load the table with results
             MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
+        catch
+            error('I could not execute the R script enrichmentGO')
+        end
+        
+    case 'EnrichmentKEGG'
+        % output directory 
+        if strcmp(saveResults, 'true')
+            outputDir = 'output_MultiPEN/enrichment-KEGG/';
+        else
+            outputDir = saveResults;
+        end
+
+        %check if output directory exists
+        if exist(outputDir, 'dir') ~= 7 && ~strcmp(saveResults, 'false')
+            mkdir(outputDir)
+        end
+        
+        % Build string to call the R string enrichmentKEGG.R  (using Rscript)
+        % syntaxis:
+        % path_to_Rscript script_to_run file_name output_directory
+        if ~isdeployed
+            callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/pathwayAnalysis/enrichmentKEGG.R';
+        else
+            callToRscript = 'Rscript pathwayAnalysis/enrichmentKEGG.R';
+        end
+        
+        try
+            callToRscript = [callToRscript ' ' mpRankings ' ' outputDir];
+            system(callToRscript)
+        
+            % Load the table with results
+            MP = readtable([outputDir 'enrichment-KEGG.txt'], 'Delimiter', '\t');
         catch
             error('I could not execute the R script enrichmentGO')
         end
