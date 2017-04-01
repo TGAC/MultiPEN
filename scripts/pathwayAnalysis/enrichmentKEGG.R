@@ -79,7 +79,8 @@ names(geneList) <- ranked$ENTREZID
 cat(sprintf("Performing over-representation analysis (with KEGG) ...  "))
 cat(sprintf("Results saved to folder: %s\n", outputDir))
 
-#Enrichment with KEGG
+
+#### Enrichment with KEGG ####
 enrichment_kegg <- enrichKEGG(ranked$ENTREZID, organism = 'hsa', keyType = "kegg")
 results <- summary(enrichment_kegg)
 head(results)
@@ -102,7 +103,7 @@ pdf(fileName)
 barplot(enrichment_kegg, showCategory=20)
 
 
-## Gene Set Enrichment with KEGG
+#### Gene Set Enrichment with KEGG ####
 kk <- gseKEGG(geneList, organism = 'hsa', keyType = "kegg")
 results <- summary(kk)
 results
