@@ -21,6 +21,9 @@
 #   File name            Tabular (txt) file with columns: (gene) name, value and ranking
 #   Output directory     
 # Outputs:
+#   enrichment-KEGG.txt   list of over-represented categories with KEGG
+#   enrichment-KEGG.pdf   figure with the first over-representated categories
+#   gse-KEGG.txt          results for gse analysis
 #
 # It requieres R Packages:
 # clusterProfiler, https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
