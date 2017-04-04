@@ -125,9 +125,7 @@ switch analysisType
                     normalise = str2num(optional(2));
                     decisionThr = str2double(optional(3:6));
                     numIter = str2double(optional(7:10));
-
-            end
-            
+            end            
         end
         
     case 'EnrichmentGO'
@@ -147,6 +145,20 @@ switch analysisType
         else
             mpRankings = varargin{1};
         end
+        
+    case 'StringDBNetwork'
+        % StringDBNetwork needs parameters:
+        % GeneList (for the list of genes), speciesCode, threshold, networkFileName
+        if ~(length(varargin) == 4)
+            error('The number of arguments is incorrect')
+        else
+            % parameters
+            GeneList = varargin{1};
+            speciesCode = varargin{2};
+            threshold = varargin{3};
+            networkFileName = varargin{4};
+        end
+        
         
     otherwise
         error('Please specify a valid analysis')
@@ -410,5 +422,33 @@ switch analysisType
         catch
             error('I could not execute the R script enrichmentGO')
         end
+        
+        
+    case 'StringDBNetwork'
+        GeneList = varargin{1};
+        speciesCode = varargin{2};
+        threshold = varargin{3};
+        networkFileName = varargin{4};
+        
+        
+        % Build string to call the R script compileNetworkStringDB.R  (using Rscript)
+        % syntaxis:
+        % path_to_Rscript compileNetworkStringDB.R GeneList speciesCode threshold networkFileName
+        if ~isdeployed
+            callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/compileNetworkStringDB.R';
+        else
+            callToRscript = 'Rscript compileNetworkStringDB.R';
+        end
+        
+        try
+            callToRscript = [callToRscript ' ' GeneList ' ' speciesCode ' ' threshold ' ' networkFileName];
+            system(callToRscript)
+        
+            % Load the table with results
+            MP = readtable(networkFileName, 'Delimiter', '\t');
+        catch
+            error('I could not execute the R script enrichmentGO')
+        end
+            
 
 end
