@@ -388,7 +388,7 @@ switch analysisType
             % Load the table with results
             MP = readtable([outputDir 'enrichment-GO.txt'], 'Delimiter', '\t');
         catch
-            error('I could not execute the R script enrichmentGO')
+            error('I could not execute the R script enrichmentGO.R')
         end
         
     case 'EnrichmentKEGG'
@@ -420,7 +420,7 @@ switch analysisType
             % Load the table with results
             MP = readtable([outputDir 'enrichment-KEGG.txt'], 'Delimiter', '\t');
         catch
-            error('I could not execute the R script enrichmentGO')
+            error('I could not execute the R script enrichmentKEGG.R')
         end
         
         
@@ -437,6 +437,9 @@ switch analysisType
         if ~isdeployed
             callToRscript = '/Library/Frameworks/R.framework/Resources/Rscript scripts/compileNetworkStringDB.R';
         else
+            %rscriptFile = fullfile(ctfroot, 'scripts/compileNetworkStringDB.R');
+            %fprintf('Absolute path for the script is: %s\n', rscriptFile)
+            %callToRscript = ['Rscript ' rscriptFile];
             callToRscript = 'Rscript compileNetworkStringDB.R';
         end
         
@@ -447,7 +450,7 @@ switch analysisType
             % Load the table with results
             MP = readtable(networkFileName, 'Delimiter', '\t');
         catch
-            error('I could not execute the R script enrichmentGO')
+            error('I could not execute the R script compileNetworkStringDB.R')
         end
             
 
