@@ -64,6 +64,9 @@ if(!dir.exists(outputDir)){
 data <- read.table(dataFile, header=TRUE, sep = "\t", stringsAsFactors=FALSE)
 cat(sprintf("Number of genes: %i\n",nrow(data)))
 
+# Genome wide annotation for Human
+source("https://bioconductor.org/biocLite.R")
+biocLite("org.Hs.eg.db")
 
 library(clusterProfiler)
 library(BBmisc)
