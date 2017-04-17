@@ -64,10 +64,6 @@ if(!dir.exists(outputDir)){
 data <- read.table(dataFile, header=TRUE, sep = "\t", stringsAsFactors=FALSE)
 cat(sprintf("Number of genes: %i\n",nrow(data)))
 
-# Genome wide annotation for Human
-source("https://bioconductor.org/biocLite.R")
-biocLite("org.Hs.eg.db")
-
 library(clusterProfiler)
 library(BBmisc)
 library(GO.db)
@@ -83,12 +79,12 @@ names(geneList) <- ranked$ENTREZID
 
 #### Over-representation Analysis ####
 cat(sprintf("Performing over-representation analysis (enrichGO) ...  "))
-cat(sprintf("Results saved to folder: %s\n", outputDir))
+cat(sprintf("Results to be saved in folder: %s\n", outputDir))
 
 #Enrichment for subontology BP (Biological Process)
 subclassOnt <- "BP"
 enrichment_BP <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_BP <- as.data.frame(enrichment_BP)
+enrichmentSummary_BP <- summary(enrichment_BP)
 head(enrichmentSummary_BP)
 if(nrow(enrichmentSummary_BP)>0){
   aux <- cbind(enrichmentSummary_BP, "BP")
@@ -101,7 +97,7 @@ results <- enrichmentSummary_BP
 #Enrichment for subontology MF (Molecular Function)
 subclassOnt <- "MF"
 enrichment_MF <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_MF <- as.data.frame(enrichment_MF)
+enrichmentSummary_MF <- summary(enrichment_MF)
 head(enrichmentSummary_MF)
 if(nrow(enrichmentSummary_MF)>0){
   aux <- cbind(enrichmentSummary_MF, "MF")
@@ -115,7 +111,7 @@ if(nrow(enrichmentSummary_MF)>0){
 #Enrichment for subclass CC (Cellular Component)
 subclassOnt <- "CC"
 enrichment_CC <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_CC <- as.data.frame(enrichment_CC)
+enrichmentSummary_CC <- summary(enrichment_CC)
 head(enrichmentSummary_CC)
 if(nrow(enrichmentSummary_CC)>0){
   aux <- cbind(enrichmentSummary_CC, "CC")
@@ -157,7 +153,7 @@ dev.off()
 #### Gene Set Enrichment Analysis ####
 # GSE for all ontologies: BP, MF and CC
 kk <- gseGO(geneList, ont = "ALL", OrgDb="org.Hs.eg.db", keytype = "ENTREZID")
-results <- as.data.frame(kk)
+results <- summary(kk)
 results <- sortByCol(results, 'setSize', asc = F)
 head(results)
 
