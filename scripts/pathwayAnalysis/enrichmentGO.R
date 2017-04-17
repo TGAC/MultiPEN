@@ -25,7 +25,7 @@
 #   enrichment-GO_BP.pdf   figure with the first over-representated biological processes terms
 #   enrichment-GO_MF.pdf   figure with the first over-representated molecular functions terms
 #   enrichment-GO_CC.pdf   figure with the first over-representated cellular components terms
-#   gse-GO.txt            results for gse analysis
+#   gse-GO.txt             results for gse analysis
 #
 #
 # It requieres R Packages:
@@ -38,10 +38,6 @@
 # Rscript enrichmentGO.R '/path-to-file/file-name.txt' 'output-folder/'
 
 
-# Check if packages are installed, otherwise, install them
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load("BBmisc", "GO.db", "org.Hs.eg.db", "clusterProfiler")
-
 # Input arguments
 args = commandArgs(trailingOnly=TRUE)
 
@@ -49,14 +45,16 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)==0) {
   stop("At least one argument must be supplied (input file).n", call.=FALSE)
 } else if (length(args)==1) {
-  # if no output file is provided, use the default folder
-  args[2] = "output_MultiPEN/enrichment-GO/"
+  # if no output file is provided, use current directory
+  outputDir = "./"
+} else if (length(args)==2) {
+  outputDir <- args[2]
 }
 
 dataFile <- args[1]
 cat(sprintf("Loading data from file: %s\n", dataFile))
 
-outputDir <- args[2]
+
 if(!dir.exists(outputDir)){
   cat(sprintf("Creating output directory: %s\n", outputDir))
   dir.create(outputDir)
@@ -72,8 +70,7 @@ library(BBmisc)
 library(GO.db)
 
 D <- sortByCol(data, 'ranking')
-D <- D[D[,2]!=0,]
-D <- D[,c(1,3)]  # Only interested in the first three columns [name, value, ranking]
+D <- D[,c(1,2,3)]  # Only interested in the first three columns [name, value, ranking]
 entrez<-bitr(D$name, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db", drop = FALSE)
 ranked<-merge(D,entrez,by.x='name',by.y='SYMBOL')
 ranked <- sortByCol(ranked, 'ranking')
@@ -88,7 +85,7 @@ cat(sprintf("Results saved to folder: %s\n", outputDir))
 #Enrichment for subontology BP (Biological Process)
 subclassOnt <- "BP"
 enrichment_BP <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_BP <- summary(enrichment_BP)
+enrichmentSummary_BP <- as.data.frame(enrichment_BP)
 head(enrichmentSummary_BP)
 if(nrow(enrichmentSummary_BP)>0){
   aux <- cbind(enrichmentSummary_BP, "BP")
@@ -101,7 +98,7 @@ results <- enrichmentSummary_BP
 #Enrichment for subontology MF (Molecular Function)
 subclassOnt <- "MF"
 enrichment_MF <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_MF <- summary(enrichment_MF)
+enrichmentSummary_MF <- as.data.frame(enrichment_MF)
 head(enrichmentSummary_MF)
 if(nrow(enrichmentSummary_MF)>0){
   aux <- cbind(enrichmentSummary_MF, "MF")
@@ -115,7 +112,7 @@ if(nrow(enrichmentSummary_MF)>0){
 #Enrichment for subclass CC (Cellular Component)
 subclassOnt <- "CC"
 enrichment_CC <- enrichGO(ranked$ENTREZID, OrgDb="org.Hs.eg.db", ont=subclassOnt, readable=TRUE)
-enrichmentSummary_CC <- summary(enrichment_CC)
+enrichmentSummary_CC <- as.data.frame(enrichment_CC)
 head(enrichmentSummary_CC)
 if(nrow(enrichmentSummary_CC)>0){
   aux <- cbind(enrichmentSummary_CC, "CC")
@@ -157,7 +154,7 @@ dev.off()
 #### Gene Set Enrichment Analysis ####
 # GSE for all ontologies: BP, MF and CC
 kk <- gseGO(geneList, ont = "ALL", OrgDb="org.Hs.eg.db", keytype = "ENTREZID")
-results <- summary(kk)
+results <- as.data.frame(kk)
 results <- sortByCol(results, 'setSize', asc = F)
 head(results)
 

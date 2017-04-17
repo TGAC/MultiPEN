@@ -33,12 +33,6 @@
 # To run script from a terminal use the command:
 # Rscript enrichmentKEGG.R 'path-to-directory/file-name.txt' 'path-to-output-folder/'
 
-
-# Check if packages are installed, otherwise, install them
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load("BBmisc", "org.Hs.eg.db", "clusterProfiler")
-
-
 # Input Arguments
 args = commandArgs(trailingOnly=TRUE)
 
@@ -46,14 +40,15 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)==0) {
   stop("At least one argument must be supplied (input file).n", call.=FALSE)
 } else if (length(args)==1) {
-  # if no output file is provided, use the default folder
-  args[2] = "output_MultiPEN/enrichment-KEGG/"
+  # if no output file is provided, use current directory
+  outputDir = "./"
+} else if (length(args)==2) {
+  outputDir <- args[2]
 }
 
 dataFile <- args[1]
 cat(sprintf("Loading data from file: %s\n", dataFile))
 
-outputDir <- args[2]
 if(!dir.exists(outputDir)){
   cat(sprintf("Creating output directory: %s\n", outputDir))
   dir.create(outputDir)
