@@ -29,24 +29,26 @@
 #   example_enrichment_KEGG.sh
 #   example_STRINGdb.sh
 
-# Receive the operating system
-if [ $# -eq 0 ]
+# Receive the operating system and version
+if [ $# -eq 0 ] || [ $# -eq 1 ]
 then
-{echo "Usage: $0 operating_system"; exit 1; }
+echo "Usage: $0 operating_system version";
+exit 1;
 else
 OS=$1
+version=$2
+echo "Copying binary for $OS, version $version"
 fi
-
 
 # folderName is the source folder for current version of MultiPEN
 # change the following accordingly
-folderName="MultiPEN_v003_OS"
+folderName="/MultiPEN_v${version}_${OS}"
+
 
 echo "###  Copy Binary to MultiPEN_Executable  ###"
-echo $OS
 
 # Copy folder for current version to MultiPEN_executable
-target="../../MultiPEN_executable/"
+target="../MultiPEN_executable/"
 target=$target$folderName
 
 echo "Copying files from  ${folderName}/   to  $target/"
@@ -54,17 +56,20 @@ echo "Copying files from  ${folderName}/   to  $target/"
 # If folder exists, delete content, then copy updated content
 if [ ! -d "$target" ]
 then
-#mkdir $target
+mkdir $target
 echo "${target}/ did not exist"
 else  # delete content
 rm -rf ${target}/MultiPEN*
 rm -r ${target}/
-echo "${target}/ and all its content has been replaced with new version"
+echo "${target}/ and all its content will be been replaced with the updated version"
 fi
 
-cp -Rp ${folderName} ${target}/
+cp -Rp ${folderName}/* ${target}/
+echo "... done!"
 
 # Compress folder for current version
-zipFile="../../MultiPEN_executable/MultiPEN_v001_OS.zip"
-zip -r -X $zipFile $folderName
+echo 'Compressing the executable...'
+zipFile="../MultiPEN_executable/MultiPEN_v${version}_${OS}.zip"
+echo " ... into file: $zipFile"
+zip -r -X $zipFile ${target}/
 echo "Compressed file in: $zipFile"
