@@ -15,7 +15,7 @@ MultiPEN is shared as a MATLAB stand-alone application, which requires the insta
 
 ####Running MultiPEN
 
-Details on how to use MultiPEN can be found in the [documentation](/MultiPEN_executable/MultiPEN_v001_documentation/user-manual.md).
+Details on how to use MultiPEN can be found in the [documentation](/MultiPEN_executable/MultiPEN_v003_documentation/user-manual.md).
 
 
 ### Using the MATLAB code
