@@ -30,11 +30,11 @@
 # Receive the operating system and version
 if [ $# -eq 0 ] || [ $# -eq 1 ]
 then
-echo "Usage: $0 operating_system version";
+echo "Usage: $0 version operating_system";
 exit 1;
 else
-OS=$1
-version=$2
+version=$1
+OS=$2
 echo "Copying binary for $OS, version $version"
 fi
 
@@ -88,9 +88,41 @@ cp -Rp ${stringdbRscript} ${folderName}
 
 
 # Copy all scripts to run examples
+echo 'Copying all example bash scripts...'
 cp -p ${exampleScripts}example_*.sh ${folderName}/  #copies all bash scripts to run examples
 if [ "$OS" == "Linux" ]; then
   chmod 755 ${folderName}/example_*.sh
 fi
 
-echo "Done!"
+echo "... done!"
+
+
+## Copy executable to MultiPEN_executable/
+
+# Copy folder for current version to MultiPEN_executable
+target="../MultiPEN_executable/MultiPEN_v${version}_${OS}"
+
+echo "Copying files from  ${folderName}/   to  $target/"
+
+# If folder exists, delete content, then copy updated content
+if [ ! -d "$target" ]
+then
+mkdir $target
+echo "${target}/ did not exist, creating folder ..."
+else  # delete content
+rm -rf ${target}/MultiPEN*
+rm -r ${target}/
+echo "${target}/ and all its content will be been replaced with the updated version ..."
+fi
+
+cp -R ${folderName}/ ${target}/
+echo "... done!"
+
+# Compress folder for current version
+echo "Compressing the executable ${target}/ ..."
+cd ../MultiPEN_executable/
+zipFile="MultiPEN_v${version}_${OS}.zip"
+echo " ... into file: $zipFile"
+
+zip -r -X $zipFile MultiPEN_v${version}_${OS}/*
+echo "Compressed file in: $zipFile"
