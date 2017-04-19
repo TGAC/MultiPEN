@@ -10,37 +10,28 @@
 # Source directory:
 #   "MultiPEN/build/operating_system/MultiPEN_current-version_operating-system/"
 
-
 # Target directory:
 #   "MultiPEN/MultiPEN_executable/MultiPEN_current-version_operating-system/"
 
 
-
-# Currrent Version: MultiPEN_v001_OS
+# Currrent Version: MultiPEN_v003_operating-system
 # Content:
 #   MultiPEN (the application)
 #   pathwayAnalysis/
 #      enrichmentGO_sortedList.R
 #      enrichmentGO.R
+#   compileNetworkStringDB.R
 #   example_cross_validation.sh
-#   example_feature_selection.sh   
-#   ExampleInputs
-#      expressionData.txt
-#      interactionMatrix.txt
-#      sampleClass.txt
-#   ExampleOutputs/
-#      CrossValidation/
-#         cross-validation_stats.txt
-#      FeatureSelection/
-#         MultiPEN-feature-selection_config.txt
-#         MultiPEN-performance_feature-selection_lambda0.0001.txt
-#         MultiPEN-Rankings_lambda0.0001_higher-in-cases.txt
-#         MultiPEN-Rankings_lambda0.0001_higher-in-control.txt
-#         MultiPEN-Rankings_lambda0.0001.txt
-#         MultiPEN-vts_lambda0.0001.txt 
+#   example_feature_selection.sh
+#   example_pca.sh
+#   example_hierarchical_clustering.sh
+#   example_enrichment_GO.sh
+#   example_enrichment_KEGG.sh
+#   example_STRINGdb.sh
 
-
-folderName="MultiPEN_v001_OS"
+# folderName is the source folder for current version of MultiPEN
+# change the following accordingly
+folderName="MultiPEN_v003_OS"
 
 echo "###  Copy Binary to MultiPEN_Executable  ###"
 
