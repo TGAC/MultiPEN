@@ -1,15 +1,15 @@
 #generation of PPI network with files downloaded from STRING server
 args <- commandArgs(trailingOnly = TRUE)
 #species
-spec<-args[4]
-spec<-"9606"
+spec<-args[3]
+#spec<-"9606"
 
 #read data
 pp <- read.delim(args[1], header=T, sep = "\t", stringsAsFactors=FALSE,fill=T)
-pp <- read.delim("STRING_prot2prot.txt", header=F, sep = " ", stringsAsFactors=F,fill=T)
+#pp <- read.delim("STRING_prot2prot.txt", header=F, sep = " ", stringsAsFactors=F,fill=T)
 colnames(pp)<-c("protS","protT","score")
 gids <- read.delim(args[2], header=T, sep = "\t", stringsAsFactors=FALSE,fill=T)
-gids <- read.delim("HGNC-9606.protein.aliases.v10.txt", header=T, sep = "\t", stringsAsFactors=FALSE,fill=T)
+#gids <- read.delim("HGNC-9606.protein.aliases.v10.txt", header=T, sep = "\t", stringsAsFactors=FALSE,fill=T)
 colnames(gids)<-c("string_protein_id","HGNC","sourcedb")
 
 #prot 2 prot

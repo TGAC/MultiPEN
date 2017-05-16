@@ -4,16 +4,16 @@ args <- commandArgs(trailingOnly = TRUE)
 
 #options
 file<-args[1]
-#file<-"genes.txt"
+#file<-"test.txt"
 n<-substr(file,1,nchar(file)-4)
 
 #recognised ID types
 #symbol; entrezgene; ensemblgene; ensemblprotein; ensembltranscript
 #for full list of fields see: http://mygene.info/doc/query_service.html#available-fields
 from <- args[2]
-#from <- "symbol"
+#from <- "ensembl.gene"
 to <- args[3]
-#to <- "ensembl.gene"
+#to <- "ensembl.protein"
 
 #define species NCBI taxonomy ID
 spec<-args[4]
@@ -27,7 +27,7 @@ m<-out@listData$ensembl
 p<-lapply(m,function(x) unlist(x))
 new<-data.frame(V1 = rep(out$query, sapply(p, length)), V2 = unlist(p))
 colnames(new)<-c(from,to)
-write.table(new, paste(n,from,to,"IDmapped.txt", sep='-'),sep="\t",row.names=F,quote = FALSE)
+write.table(new, paste(n,from,to,"IDmap.txt", sep='_'),sep="\t",row.names=F,quote = FALSE)
 
 
 
