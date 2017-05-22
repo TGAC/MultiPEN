@@ -27,9 +27,9 @@ figure()
 c = unique(groupLabels);  % c contains the unique groups
 switch numel(c)
     case 2
-        gscatter3(x,y,z,groupLabels, {'b', 'm'}, {'*','s'}, 20);
+        gscatter3(x,y,z,groupLabels, {'b', 'm'}, {'*','s'});
     case 4 
-        gscatter3(x,y,z,groupLabels, {'b', 'k', 'm', 'g'}, {'*','s','o','d'}, 20);
+        gscatter3(x,y,z,groupLabels, {'b', 'k', 'm', 'g'}, {'*','s','o','d'});
     case 10
         gscatter3(x,y,z,groupLabels, {'b', 'b', 'k', 'k', 'm', 'm', 'g', 'g', 'r', 'r'}, ...
             {'*','s','*','s','*','s','*','s','*','s'});
