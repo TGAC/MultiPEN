@@ -13,7 +13,7 @@ MultiPEN is shared as a MATLAB stand-alone application, which requires the insta
 
 3. Download the application (v.0.0.1 to be released soon! - OS and Linux).
 
-####Running MultiPEN
+#### Running MultiPEN
 
 Details on how to use MultiPEN can be found in the [documentation](/MultiPEN_executable/MultiPEN_v003_documentation/user-manual.md).
 
@@ -28,7 +28,7 @@ To use the MATLAB code, install the required libraries:
 
 
 ## About Us
-This repository is developed by the [Jurkowski Group](http://www.earlham.ac.uk/jurkowski-group) in the Earlham Institute. It is updated and maintained by [Perla Rey](http://www.earlham.ac.uk/perla-troncoso-rey), who can be reached by email on Perla.TroncosoRey@earlham.ac.uk
+This repository is developed by the [Jurkowski Group](http://www.earlham.ac.uk/jurkowski-group) in the Earlham Institute. 
 
 
 
