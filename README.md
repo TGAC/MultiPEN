@@ -28,7 +28,7 @@ To use the MATLAB code, install the required libraries:
 
 
 ## About Us
-This repository is developed by the [Jurkowski Group](http://www.earlham.ac.uk/jurkowski-group) in the Earlham Institute. 
+This repository is developed by the [Jurkowski Group](http://www.earlham.ac.uk/jurkowski-group) in the Earlham Institute. For any questions or comments please contact Wiktor at wiktor.jurkowski@earlham.ac.uk. 
 
 
 
